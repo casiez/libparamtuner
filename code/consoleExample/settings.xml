@@ -1,0 +1,4 @@
+<!DOCTYPE Configuration>
+<ParamList>
+	<setting1 value="2.3" type="slider" min="0" max="100"/>
+</ParamList>
