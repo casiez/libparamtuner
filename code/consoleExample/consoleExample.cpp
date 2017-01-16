@@ -12,17 +12,24 @@
  */
 
 #include <iostream>
+#include <string>
 // #include <libparamtuner.h>
 
 int main(int argc, char* argv[]) {
 	double s1 = 2.0;
 	int s2 = 1;
+	bool b = false;
+	std::string s;
+
+	// lptLoad("settings.xml");
 	// lptBind("setting1", &s1);
 	// lptBind("setting2", &s2);
+	// lptBind("mybool", &b);
+	// lptBind("mystring", &s);
 
 	while (true) {
 		usleep(1000*500); // 500 ms
-		std::cout << "Setting 1 = " << s1 << " setting 2 = " << s2 << std::endl; 
+		std::cout << "Setting 1 = " << s1 << " setting 2 = " << s2 << std::endl;
 	}
 
 }
