@@ -9,7 +9,7 @@ class ParamTuner : public QObject
 {
 	Q_OBJECT
 public:
-	QFileSystemWatcher *settingWatcher;
+	QFileSystemWatcher settingWatcher;
 	QString settingPath;
 
 	ParamTuner(const char *path);
