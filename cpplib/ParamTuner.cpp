@@ -7,15 +7,15 @@
 using namespace std;
 
 ParamTuner::ParamTuner(const char *path) :
-		settingWatcher(),
 		settingPath(path)
 {
-	settingWatcher.addPath(settingPath);
+	settingWatcher = new QFileSystemWatcher();
+	settingWatcher->addPath(settingPath);
 
-		QObject::connect(&settingWatcher, SIGNAL(fileChanged(QString)),
-				this, SLOT(receiveSignal(QString)));
-		QObject::connect(&settingWatcher, SIGNAL(directoryChanged(QString)),
-				this, SLOT(receiveSignal(QString)));
+			connect(settingWatcher, SIGNAL(fileChanged(QString)),
+					this, SLOT(receiveSignal(QString)));
+			connect(settingWatcher, SIGNAL(directoryChanged(QString)),
+					this, SLOT(receiveSignal(QString)));
 }
 
 
@@ -27,4 +27,5 @@ int ParamTuner::lptBind(const string &setting, void *ptr)
 void ParamTuner::receiveSignal(const QString &path)
 {
 	cout << "Le fichier a été modifié : " << path.toStdString() << endl;
+	settingWatcher->addPath(settingPath);
 }

@@ -32,10 +32,12 @@ int main(int argc, char* argv[]) {
 	// lptBind("mybool", &b);
 	// lptBind("mystring", &s);
 
-	while (true) {
+	// pour QT, l'appel à app.exec() est nécessaire
+	// pour recevoir les évènements de modification du fichier
+	/*while (false) {
 		usleep(1000*500); // 500 ms
 		std::cout << "Setting 1 = " << s1 << " setting 2 = " << s2 << std::endl;
-	}
+	}*/
 
 	return app.exec();
 }
