@@ -1,4 +1,5 @@
-#include "QtFileSystemWatcher.hpp"
+#include "FileSystemWatcher.hpp"
+#include "FileSystemWatcherFactory.hpp"
 #include "libparamtuner.h"
 #include <map>
 #include "rapidxml-1.13/rapidxml.hpp"
@@ -116,7 +117,7 @@ int lptLoad(const string &path)
 	if (watcher) { delete watcher; }
 
 	// Construit l'objet permettant de surveiller le fichier de config
-	watcher = new QtFileSystemWatcher(path, fileModificationCallback);
+	watcher = createFileSystemWatcher(path, fileModificationCallback);
 	// Verifie que la construction s'est bien passé
 	if (!watcher) { return -1; }
 

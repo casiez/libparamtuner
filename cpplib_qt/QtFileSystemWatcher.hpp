@@ -25,7 +25,7 @@ protected:
 	}
 	
 public:
-	QtFileSystemWatcher(const std::string path, voidfunc callback) :
+	QtFileSystemWatcher(const std::string &path, voidfunc callback) :
 			FileSystemWatcher(path, callback),
 			settingPath(path.c_str()) {
 		settingWatcher.addPath(settingPath);

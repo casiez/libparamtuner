@@ -18,7 +18,7 @@ protected:
 	virtual void update() = 0;
 	
 public:
-	FileSystemWatcher(const std::string path, voidfunc callback) :
+	FileSystemWatcher(const std::string &path, voidfunc callback) :
 			path(path),
 			callback(callback) {
 	}
