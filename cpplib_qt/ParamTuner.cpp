@@ -18,10 +18,9 @@ ParamTuner::ParamTuner(const char *path) :
 }
 
 
-int ParamTuner::lptBind(const string &setting, void *ptr)
+void ParamTuner::lptBind(const string &setting, void *ptr)
 {
-	// TODO
-	return 0;
+	binding[setting] = ptr;
 }
 
 void ParamTuner::receiveSignal(const QString &path)

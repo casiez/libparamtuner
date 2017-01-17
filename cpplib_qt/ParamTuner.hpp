@@ -4,6 +4,7 @@
 #include <QtCore/QString>
 #include <QtCore/QObject>
 #include <QtCore/QFileSystemWatcher>
+#include <map>
 
 class ParamTuner : public QObject
 {
@@ -11,12 +12,13 @@ class ParamTuner : public QObject
 public:
 	QFileSystemWatcher settingWatcher;
 	QString settingPath;
+	std::map<std::string, void*> binding;
 
 	ParamTuner(const char *path);
 
 	virtual ~ParamTuner(void) {}
 
-	int lptBind(const std::string &setting, void *ptr);
+	void lptBind(const std::string &setting, void *ptr);
 
 public slots:
 	void receiveSignal(const QString &path);

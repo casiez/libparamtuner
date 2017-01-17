@@ -22,5 +22,6 @@ int lptBind(const string &setting, void *ptr)
 {
 	if (!paramTuner) { return -1; }
 
-	return paramTuner->lptBind(setting, ptr);
+	paramTuner->lptBind(setting, ptr);
+	return 0;
 }
