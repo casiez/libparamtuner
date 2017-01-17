@@ -36,8 +36,6 @@ ParamTuner::ParamTuner(const char *path) :
 	// connect the signal from Qt Watcher to receiveSignal() slot
 	connect(&settingWatcher, SIGNAL(fileChanged(QString)),
 			this, SLOT(receiveSignal(QString)));
-	connect(&settingWatcher, SIGNAL(directoryChanged(QString)),
-			this, SLOT(receiveSignal(QString)));
 }
 
 
