@@ -37,7 +37,7 @@ int string_to_int(const string & str)
 	return dest;
 }
 
-void fileModificationCallback()
+void loadFile(bool verbose)
 {
 	
 	// inspiré de https://gist.github.com/JSchaenzle/2726944
@@ -56,7 +56,8 @@ void fileModificationCallback()
 	root_node = doc.first_node("ParamList");
 	
 	if (!root_node) {
-		cerr << "Settings file does not contains ParamList root node" << endl;
+		if (verbose)
+			cerr << "Settings file does not contains ParamList root node" << endl;
 		return;
 	}
 	// Iterate over the brewerys
@@ -64,17 +65,20 @@ void fileModificationCallback()
 	{
 		string name(param_node->name());
 		if (binding.find(name) == binding.end()) {
-			cerr << "Setting '" << name << "' is not binded with lptBind()" << endl;
+			if (verbose)
+				cerr << "Setting '" << name << "' is not binded with lptBind()" << endl;
 			continue;
 		}
 		xml_attribute<> *value_attr = param_node->first_attribute("value");
 		xml_attribute<> *type_attr = param_node->first_attribute("type");
 		if (!value_attr) {
-			cerr << "Setting '" << name << "' does not have 'value' attribute" << endl;
+			if (verbose)
+				cerr << "Setting '" << name << "' does not have 'value' attribute" << endl;
 			continue;
 		}
 		if (!type_attr) {
-			cerr << "Setting '" << name << "' does not have 'type' attribute" << endl;
+			if (verbose)
+				cerr << "Setting '" << name << "' does not have 'type' attribute" << endl;
 			continue;
 		}
 	    string type(type_attr->value());
@@ -95,7 +99,8 @@ void fileModificationCallback()
 			*((double*)binding[name]) = string_to_double(value);
 		}
 		else {
-			cerr << "Setting '" << name << "' has an unsupported 'type' attribute" << endl;
+			if (verbose)
+				cerr << "Setting '" << name << "' has an unsupported 'type' attribute" << endl;
 		}
 	    
 	}
@@ -103,6 +108,10 @@ void fileModificationCallback()
 	
 	
 	
+}
+
+void fileModificationCallback() {
+	loadFile(true);
 }
 
 
@@ -127,4 +136,5 @@ int lptLoad(const string &path)
 void lptBind(const string &setting, void *ptr)
 {
 	binding[setting] = ptr;
+	loadFile(false);
 }
