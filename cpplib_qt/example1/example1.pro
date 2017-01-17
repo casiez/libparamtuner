@@ -7,5 +7,6 @@ INCLUDEPATH += . .. ../rapidxml-1.13
 QMAKE_CXXFLAGS += -std=c++11
 
 # Input
-HEADERS += libparamtuner.h ParamTuner.hpp
-SOURCES += example1.cpp libparamtuner.cpp ParamTuner.cpp
+HEADERS += libparamtuner.h FileSystemWatcher.hpp QtFileSystemWatcher.hpp
+
+SOURCES += example1.cpp libparamtuner.cpp
