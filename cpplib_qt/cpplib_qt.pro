@@ -1,7 +1,7 @@
 # Project file for example1
 
 TEMPLATE = lib
-TARGET = libParamTuner-Qt
+TARGET = ParamTuner-Qt
 DEPENDPATH += .
 INCLUDEPATH += .
 
