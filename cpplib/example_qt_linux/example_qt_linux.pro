@@ -1,12 +1,12 @@
-# Project file for example1
+# Project file for example_qt_linux
 
 TEMPLATE = app
-TARGET = example2
+TARGET = example_qt_linux
 DEPENDPATH += . .. ../rapidxml-1.13
 INCLUDEPATH += . .. ../rapidxml-1.13
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++11 -DFILE_SYSTEM_WATCHER_USE_QT
 
 # Input
 HEADERS += libparamtuner.h FileSystemWatcher.hpp QtFileSystemWatcher.hpp
 
-SOURCES += example2.cpp libparamtuner.cpp
+SOURCES += example_qt_linux.cpp libparamtuner.cpp
