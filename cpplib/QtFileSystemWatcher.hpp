@@ -44,8 +44,7 @@ public slots:
 		if (path != settingPath)
 			return;
 		#ifdef _WIN32
-			/*
-				Il semblerai que Windows envoi le signal avant même
+			/*  Il semblerai que Windows envoi le signal avant même
 				que la dernière version du fichier soit complètement
 				écrit sur le disque. De ce cas, le parseur XML lançait
 				une exception.

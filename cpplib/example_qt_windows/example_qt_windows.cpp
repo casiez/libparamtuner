@@ -15,7 +15,6 @@
 #include <string>
 #include <QtGui/QApplication>
 #include <windows.h>
-#include <thread>
 #include "libparamtuner.h"
 
 using namespace std;

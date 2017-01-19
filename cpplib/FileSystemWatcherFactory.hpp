@@ -12,7 +12,7 @@
 #elif defined __APPLE__
 
 #elif defined _WIN32
-	
+	#include "Win32FileSystemWatcher.hpp"
 #endif
 
 
@@ -28,7 +28,7 @@ FileSystemWatcher* createFileSystemWatcher(const std::string &path, voidfunc cal
 	#elif defined __APPLE__
 		#error "not yet implemented"
 	#elif defined _WIN32
-		#error "not yet implemented"
+		return new Win32FileSystemWatcher(path, callback);
 	#else
 		#error "operating system not supported"
 	#endif
