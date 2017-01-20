@@ -1,23 +1,21 @@
 # libParamTuner
 
-C++ library which allows developers to set up internal software settings
+Library allowing developers to set up internal software settings
 in real-time. It avoid repetitively compile a whole software every time
-we need to change a constant value inside the source code (for testing
-purpose).
+we need to change a constant value inside the source code.
 
-## Library for Qt 4.8+ applications
+## C++ Library
 
-This first version of the library is prefered for Qt application, because
-it use Qt library to works.
+The C++ libParamTuner library can be compiled for 2 purpose :
 
-Read `cpplib_qt/Readme.md` for more informations.
+* If you develop Qt Application, libParamTuner can depend on Qt too ([QFileSystemWatcher](http://doc.qt.io/qt-4.8/qfilesystemwatcher.html))
+* For other C++ developers, libParamTuner can use system-dependent libraries that are
+  already installed in their respective OS :
+    * Windows ([FindFirstChangeNotification() function](https://msdn.microsoft.com/en-us/library/aa364417%28VS.85%29.aspx))
+    * Linux (kernel > 2.6.13, with [Inotify](https://en.wikipedia.org/wiki/Inotify))
+	* Mac OS X (version > 10.5, with [FSEvents](https://developer.apple.com/library/content/documentation/Darwin/Conceptual/FSEvents_ProgGuide/Introduction/Introduction.html))
 
-## Library for other C++ applications
-
-(Soon)
-
-This version will use plateform-dependant libraries to watch file
-modifications
+Read `cpplib/Readme.md` for more informations about compilation.
 
 ## ParamTuner GUI
 
@@ -26,27 +24,6 @@ modifications
 This Java (Swing) interface will allow developers to change value in
 real-time without having to edit the settings file manually.
 
-## Library for Java applications
+## Java Library
 
 (Later, if we have time)
-
-
-
-
-## Tools that we used
-
-### File system monitoring librairies
-
-#### Cross plateform
-* [QFileSystemWatcher](http://doc.qt.io/qt-4.8/qfilesystemwatcher.html) 
-
-#### Linux
-* [libfam](https://en.wikipedia.org/wiki/File_Alteration_Monitor)
-* [inotify](https://en.wikipedia.org/wiki/Inotify)
-
-#### OS X
-* [DSEvents](https://developer.apple.com/library/mac/documentation/Darwin/Conceptual/FSEvents_ProgGuide/Introduction/Introduction.html#//apple_ref/doc/uid/TP40005289-CH1-DontLinkElementID_15)
-
-#### Windows
-* [FindFirstChangeNotification](https://msdn.microsoft.com/en-us/library/aa364417%28VS.85%29.aspx)
-

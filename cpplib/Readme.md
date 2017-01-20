@@ -1,31 +1,32 @@
-# libParamTuner for Qt 4.8+ applications
+# libParamTuner C++
 
-## Library compilation
+## Static library compilation
 
-### Linux
+### For Qt 4.8+ applications
 
-* Go to directory `cpplib_qt` and open terminal
+* Go into directory `cpplib` and open terminal
+* Open the file `cpplib.pro`, uncomment the line `CONFIG += lpt_use_qt` and save.
 * Run `qmake && make`
-* Library files : `libParamTuner-Qt.so*`
+* Library files : `libParamTuner-Qt.a` (may be in `release` subdirectory)
 * Header file : `libparamtuner.h`
 
-### Windows
+### For Native Windows, linux (and Mac OS ? )
 
-* Go to directory `cpplib_qt` and open terminal
-* (TODO)
-
-### Mac
-
-* Go to directory `cpplib_qt` and open terminal
-* (TODO)
+* Go into directory `cpplib` and open terminal
+* Open the file `cpplib.pro`, comment the line `CONFIG += lpt_use_qt` and save.
+* Run `qmake && make`
+* Library files : `libParamTuner.a` (may be in `release` subdirectory)
+* Header file : `libparamtuner.h`
 
 ## Test compilation and execution
 
-* Go to directory `cpplib_qt/example1` and open terminal
+* Go into one of the 'example_...' directories
 * Run `qmake && make`
-* Run `./example1`
+* Run `./example_...` executable
 
-You can modify `settings.xml` file, `example1` will automatically apply
-modification into defined variables.
+You can modify and save `settings.xml` file, the programm will
+automatically update the variables in the memory.
 
-Source file of example : `example1.cpp`
+`qt` examples work with the Qt version of the library.
+
+`nativ` examples work with the native OS dependencies.
