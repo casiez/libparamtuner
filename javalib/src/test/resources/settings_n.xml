@@ -1,0 +1,7 @@
+<!DOCTYPE Configuration>
+<ParamList>
+	<setting1 value="6.75" type="double" min="0" max="100"/>
+	<setting2 value="17" type="int" min="0" max="100"/>
+	<mystring value="new_file_copied" type="string"/>
+	<mybool value="false" type="bool"/>
+</ParamList>
