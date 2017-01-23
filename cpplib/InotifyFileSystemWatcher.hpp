@@ -59,12 +59,6 @@ public:
 		close(inotifyFileDesc);
 	}
 
-	//void receiveSignal(const QString &path) {
-	//	if (path != settingPath)
-	//		return;
-	//	FileSystemWatcher::receiveSignal();
-	//}
-	
 	
 	
 	

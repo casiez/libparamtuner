@@ -39,7 +39,8 @@ int string_to_int(const string & str)
 
 void loadFile(bool verbose)
 {
-	
+	if (!watcher)
+		return;
 	// inspiré de https://gist.github.com/JSchaenzle/2726944
 	try {
 	
