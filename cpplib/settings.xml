@@ -1,6 +1,6 @@
 <!DOCTYPE Configuration>
 <ParamList>
-	<!-- 
+	<!--
 		tag name :	the name of the setting
 		value= :	the actual value of the setting. Must be coherent with the type
 		type= :		the type of the setting. Supported type are
@@ -13,5 +13,5 @@
 	<setting1 value="2.3" type="double" min="0" max="100"/>
 	<setting2 value="2" type="int" min="0" max="100"/>
 	<mybool value="true" type="bool"/>
-	<mystring value="thfffffffd" type="string"/>
+	<mystring value="fbvqfdgsh" type="string"/>
 </ParamList>
