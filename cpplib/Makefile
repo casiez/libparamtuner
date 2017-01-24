@@ -16,9 +16,17 @@ TARGET_TEST = test_nativ_linux \
 							test_qt_windows \
 
 
-CPPFLAGS = -std=c++11
+CPPFLAGS = -std=c++11 -Wall -Wextra -Wno-unused-parameter
 
-QTINCROOT = /usr/include/qt4
+ifeq ($(OS),Windows_NT)
+    QTINCROOT = c:/Qt/4.8.6/include
+    QTLIB = c:/Qt/4.8.6/lib
+    CPPFLAGS += -DUNICODE
+else
+    QTINCROOT = /usr/include/qt4
+endif
+
+
 QTINCSUB = QtCore QtGui .
 QTINC = $(addprefix -I$(QTINCROOT)/, $(QTINCSUB))
 
@@ -30,12 +38,13 @@ all: ${TARGET_LIB}
 
 
 
+# ligne de compilation spécifique pour la version Qt car on passe
+# un define en option : -DFILE_SYSTEM_WATCHER_USE_QT
+libparamtuner-Qt.o: libparamtuner.cpp
+	${CXX} -DFILE_SYSTEM_WATCHER_USE_QT ${QTINC} -c ${CPPFLAGS} ${LDINCS} -o $@ $<
 
 %.o: %.cpp
-	${CXX} -c ${CPPFLAGS} ${LDINCS} $<
-
-moc_%.o: moc_%.cpp
-	${CXX} -c ${CPPFLAGS} ${LDINCS} ${QTINC} $<
+	${CXX} -c ${CPPFLAGS} ${LDINCS} ${QTINC} -o $@ $<
 
 moc_%.cpp: %.hpp
 	${MOC} $(INCPATH) $< -o $@
@@ -45,12 +54,15 @@ ${TARGET_LIB}:
 	${AR} $@ $^
 
 clean:
-	rm -f ${TARGET_LIB} ${TARGET_TEST} *.o moc_*
-.PHONY: clean all
+	rm -f ${TARGET_LIB} ${TARGET_TEST} *.o moc_* *.exe
+
+.PHONY: clean all libqt lib
 
 
-libParamTuner-Qt.a: libparamtuner.o moc_QtFileSystemWatcher.o
+
+libParamTuner-Qt.a: libparamtuner-Qt.o moc_QtFileSystemWatcher.o
 libParamTuner.a: libparamtuner.o
+
 
 # test files
 test_nativ_linux: libParamTuner.a test_nativ_linux.o
@@ -60,4 +72,4 @@ test_qt_linux: libParamTuner-Qt.a test_qt_linux.o
 test_nativ_windows: libParamTuner.a test_nativ_windows.o
 	${CXX} -I.. ${CPPFLAGS} -o $@ test_nativ_windows.o -L. -lParamTuner
 test_qt_windows: libParamTuner-Qt.a test_qt_windows.o
-	${CXX} -I.. ${CPPFLAGS} -o $@ test_nativ_windows.o -L. -lParamTuner -lQtGui4
+	${CXX} -I.. ${CPPFLAGS} -o $@ test_qt_windows.o -L. -lParamTuner-Qt -L${QTLIB} -lQtGui4 -lQtCore4
