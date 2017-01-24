@@ -68,7 +68,7 @@ libParamTuner.a: libparamtuner.o
 test_nativ_linux: libParamTuner.a test_nativ_linux.o
 	${CXX} -I.. ${CPPFLAGS} -o $@ test_nativ_linux.o -L. -lParamTuner -lpthread
 test_qt_linux: libParamTuner-Qt.a test_qt_linux.o
-	${CXX} -I.. ${CPPFLAGS} -o $@ test_qt_linux.o -L. -lParamTuner-Qt -lpthread -lQtGui
+	${CXX} -I.. ${CPPFLAGS} -o $@ test_qt_linux.o -L. -lParamTuner-Qt -lpthread -lQtGui -lQtCore
 test_nativ_windows: libParamTuner.a test_nativ_windows.o
 	${CXX} -I.. ${CPPFLAGS} -o $@ test_nativ_windows.o -L. -lParamTuner
 test_qt_windows: libParamTuner-Qt.a test_qt_windows.o
