@@ -75,6 +75,5 @@ real-time without having to edit the settings file manually.
 
 * Change the generated file name of the Java library (POM configuration)
 * Add Mac-OS compatibility to C++ library
-* Add documentation to libparamtuner.h
 * Add Javadoc to Java library (and add command to generate Javadoc with Maven)
 * Make the GUI
