@@ -4,6 +4,7 @@
     <groupId>fr.univ_lille1.pji.libparamtuner</groupId>
     <artifactId>libParamTuner</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
     
     <name>libParamTuner</name>
     
@@ -21,4 +22,8 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    
+    <build>
+        <finalName>${project.name}</finalName>
+    </build>
 </project>
