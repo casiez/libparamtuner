@@ -63,6 +63,8 @@ To use it in a Maven project, add theses lines in your POM's
 If you have a non-Maven project, just add `libParamTuner.jar` to the
 build path of your project.
 
+To get the javadoc, run `mvn javadoc:javadoc` , then go to the subdirectory
+`target/site/apidocs`
 
 ## ParamTuner GUI
 
@@ -74,5 +76,4 @@ real-time without having to edit the settings file manually.
 ## TODO list :
 
 * Add Mac-OS compatibility to C++ library
-* Add Javadoc to Java library (and add command to generate Javadoc with Maven)
 * Make the GUI

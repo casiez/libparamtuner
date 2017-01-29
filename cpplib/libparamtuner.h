@@ -18,7 +18,7 @@
 	error stream. If a node has not a valid type or value, an error will be
 	displayed too, and the variable will not be updated.
 	
-	When this function is called multiple times, the last call disable
+	When this function is called multiple times, the current call disable
 	listener of the previous call.
 	
 	\param path the relative or absolute path to the file to listen to
