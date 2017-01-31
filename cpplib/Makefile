@@ -1,9 +1,3 @@
-
-
-
-
-
-
 CXX = g++
 AR = ar cqs
 MOC = moc
@@ -30,13 +24,10 @@ endif
 QTINCSUB = QtCore QtGui .
 QTINC = $(addprefix -I$(QTINCROOT)/, $(QTINCSUB))
 
-
-
+doc:
+	cd doc && doxygen doxygen.conf
 
 all: ${TARGET_LIB}
-
-
-
 
 # ligne de compilation spécifique pour la version Qt car on passe
 # un define en option : -DFILE_SYSTEM_WATCHER_USE_QT
@@ -56,13 +47,10 @@ ${TARGET_LIB}:
 clean:
 	rm -f ${TARGET_LIB} ${TARGET_TEST} *.o moc_* *.exe
 
-.PHONY: clean all libqt lib
-
-
+.PHONY: clean all libqt lib doc
 
 libParamTuner-Qt.a: libparamtuner-Qt.o moc_QtFileSystemWatcher.o
 libParamTuner.a: libparamtuner.o
-
 
 # test files
 test_nativ_linux: libParamTuner.a test_nativ_linux.o
