@@ -138,8 +138,8 @@ int lptLoad(const string &path)
 	return 0;
 }
 
-void lptBind(const string &setting, void *ptr)
+void lptBind(const string &name, void *ptr)
 {
-	binding[setting] = ptr;
+	binding[name] = ptr;
 	loadFile(false);
 }
