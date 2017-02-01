@@ -24,8 +24,13 @@ endif
 QTINCSUB = QtCore QtGui .
 QTINC = $(addprefix -I$(QTINCROOT)/, $(QTINCSUB))
 
+DOCDIR = doc
+FORMAT_DOC = html latex man
+
+TARGET_DOC = $(addprefix ${DOCDIR}/, ${FORMAT_DOC})
+
 doc:
-	cd doc && doxygen doxygen.conf
+	cd ${DOCDIR} && doxygen doxygen.conf
 
 all: ${TARGET_LIB}
 
@@ -47,7 +52,10 @@ ${TARGET_LIB}:
 clean:
 	rm -f ${TARGET_LIB} ${TARGET_TEST} *.o moc_* *.exe
 
-.PHONY: clean all libqt lib doc
+realclean: clean
+	rm -rf ${TARGET_DOC}	
+
+.PHONY: clean realclean all libqt lib doc
 
 libParamTuner-Qt.a: libparamtuner-Qt.o moc_QtFileSystemWatcher.o
 libParamTuner.a: libparamtuner.o
