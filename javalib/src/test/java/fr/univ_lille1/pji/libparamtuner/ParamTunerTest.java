@@ -16,6 +16,9 @@ public class ParamTunerTest {
 	
 	
 	
+	Throwable threadThrowable;
+	
+	
 	
 	double setting1;
 	int setting2;
@@ -27,6 +30,8 @@ public class ParamTunerTest {
 	
 	@Before
 	public void setUp() throws Exception {
+		threadThrowable = null;
+		
 		setting1 = 0;
 		setting2 = 0;
 		mybool = false;
@@ -36,14 +41,13 @@ public class ParamTunerTest {
 	}
 	
 	@Test
-	public void testMain() throws Exception {
-		
+	public void testMain() throws Throwable {
 		// utilisation de ParamTuner :
 		ParamTuner.load(watchedPath);
-		ParamTuner.bindDouble("setting1", v -> setting1 = v);
-		ParamTuner.bindInt("setting2", v -> setting2 = v);
-		ParamTuner.bindBoolean("mybool", v -> mybool = v);
-		ParamTuner.bindString("mystring", v -> mystring = v);
+		ParamTuner.bind("setting1", Double.class, v -> setting1 = v);
+		ParamTuner.bind("setting2", Integer.class, v -> setting2 = v);
+		ParamTuner.bind("mybool", Boolean.class, v -> mybool = v);
+		ParamTuner.bind("mystring", String.class, v -> mystring = v);
 		
 		
 		// thread qui va provoquer automatiquement un changement dans le fichier settings.xml
@@ -58,8 +62,8 @@ public class ParamTunerTest {
 				}
 			} catch (InterruptedException e) {
 				return;
-			} catch (Exception e) {
-				e.printStackTrace();
+			} catch (Throwable e) {
+				threadThrowable = e;
 			}
 		});
 		t.start();
@@ -75,6 +79,9 @@ public class ParamTunerTest {
 		}
 		
 		t.interrupt();
+		t.join();
+		if (threadThrowable != null)
+			throw threadThrowable;
 	}
 	
 }

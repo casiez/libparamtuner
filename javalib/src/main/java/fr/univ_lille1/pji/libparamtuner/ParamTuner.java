@@ -2,28 +2,14 @@ package fr.univ_lille1.pji.libparamtuner;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.DoubleConsumer;
-import java.util.function.IntConsumer;
-import java.util.function.LongConsumer;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import fr.univ_lille1.pji.libparamtuner.parameters.Parameter;
+import fr.univ_lille1.pji.libparamtuner.parameters.Type;
+import fr.univ_lille1.pji.libparamtuner.parameters.ParameterFile;
 
 /**
  * Class allowing developers to set up internal software settings in real-time.
@@ -67,10 +53,10 @@ import org.w3c.dom.NodeList;
  *  		ParamTuner.load("settings.xml"); // relative path are allowed
  *  
  *  		// we use lambda expression here. v is the new value read in file.
- *  		ParamTuner.bindString("myString", v -> stringValue = v);
+ *  		ParamTuner.bind("myString", String.class, v -> stringValue = v);
  *  		
  *  		// we use method reference here, if you have a setter for your variable
- *  		ParamTuner.bindInt("myInteger", Foo::setInt); 
+ *  		ParamTuner.bind("myInteger", Integer.class, Foo::setInt); 
  *  		
  *  		while(true) { // your main loop
  *  			Thread.sleep(500);
@@ -87,239 +73,93 @@ import org.w3c.dom.NodeList;
  * <b>List of supported types :</b>
  * <table border="1">
  * 	<tr>
- * 		<td>Bind method</td>
  * 		<td>Java type</td>
  * 		<td><code>type</code> attribute</td>
  * 		<td><code>value</code> attribute interpretation</td>
  * 	</tr>
  * 	<tr>
- * 		<td>{@link #bindBoolean(String, Consumer)}</td>
  * 		<td><code>boolean</code>, {@link Boolean}</td>
- * 		<td><code>bool</code></td>
+ * 		<td><code>bool</code> or <code>boolean</code></td>
  * 		<td>See {@link Boolean#parseBoolean(String)}</td>
  * 	</tr>
  * 	<tr>
- * 		<td>{@link #bindString(String, Consumer)}</td>
  * 		<td>{@link String}</td>
  * 		<td><code>string</code></td>
  * 		<td>As is</td>
  * 	</tr>
  * 	<tr>
- * 		<td>{@link #bindInt(String, IntConsumer)}</td>
- * 		<td><code>int</code>, {@link Integer}</td>
- * 		<td><code>int</code></td>
- * 		<td>See {@link Integer#parseInt(String)}</td>
- * 	</tr>
- * 	<tr>
- * 		<td>{@link #bindLong(String, LongConsumer)}</td>
- * 		<td><code>long</code>, {@link Long}</td>
- * 		<td><code>int</code></td>
+ * 		<td><code>int</code>, {@link Integer}, <code>long</code>, {@link Long}</td>
+ * 		<td><code>int</code>, <code>integer</code> or <code>long</code></td>
  * 		<td>See {@link Long#parseLong(String)}</td>
  * 	</tr>
  * 	<tr>
- * 		<td>{@link #bindFloat(String, Consumer)}</td>
- * 		<td><code>float</code>, {@link Float}</td>
- * 		<td><code>double</code></td>
- * 		<td>See {@link Float#parseFloat(String)}</td>
- * 	</tr>
- * 	<tr>
- * 		<td>{@link #bindDouble(String, DoubleConsumer)}</td>
- * 		<td><code>double</code>, {@link Double}</td>
- * 		<td><code>double</code></td>
+ * 		<td><code>double</code>, {@link Double}, <code>float</code>, {@link Float}</td>
+ * 		<td><code>double</code> or <code>float</code></td>
  * 		<td>See {@link Double#parseDouble(String)}</td>
  * 	</tr>
  * </table>
  * 
  * 
  */
-public class ParamTuner extends Thread {
+public class ParamTuner {
 	
-	private final File confFile;
-	private final Path parentPath;
-	
-	private final WatchService watcher;
-	private final WatchKey key;
-	
-	private ParamTuner(File configFile) throws IOException {
-		super("libParamTuner Thread");
-		
-		confFile = configFile.getAbsoluteFile();
-		if (!confFile.isFile())
-			throw new IllegalArgumentException("configFile is not a regular file");
-		if (confFile.getParentFile() == null)
-			throw new IllegalArgumentException("configFile hasn't got a parent directory");
-		
-		parentPath = confFile.getParentFile().toPath();
-		
-		// initilaise a new watcher service
-		watcher = FileSystems.getDefault().newWatchService();
-		
-		key = parentPath.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
-	}
-	
-	private static void printError(String message) {
+	/* package */ static void printError(String message) {
 		System.err.println("libParamTuner: " + message);
-	}
-	
-	@Override
-	public void run() {
-		try {
-			for (;;) {
-				
-				// wait for key to be signalled
-				WatchKey key;
-				try {
-					key = watcher.take();
-				} catch (InterruptedException e) {
-					printError("thread interrupted");
-					watcher.close();
-					return;
-				}
-				
-				
-				if (key == null || !key.equals(this.key))
-					continue;
-				
-				for (WatchEvent<?> event : key.pollEvents()) {
-					WatchEvent.Kind<?> kind = event.kind();
-					
-					// TBD - provide example of how OVERFLOW event is handled
-					if (kind == StandardWatchEventKinds.OVERFLOW)
-						continue;
-					
-					@SuppressWarnings("unchecked")
-					Path child = parentPath.resolve(((WatchEvent<Path>) event).context());
-					if (!child.toFile().equals(confFile))
-						continue;
-					
-					loadFile(true);
-					
-				}
-				
-				// reset key and remove from set if directory no longer accessible
-				boolean valid = key.reset();
-				if (!valid) {
-					printError("WatchKey no longer valid");
-					watcher.close();
-					return;
-				}
-			}
-		} catch (Exception e) {
-			printError("Exception in watcher thread:");
-			e.printStackTrace();
-		}
 	}
 	
 	/*
 	 * Static data structure
 	 */
-	private static ParamTuner paramWatcherInstance;
+	private static FileWatcher fileWatcherInstance;
 	
-	private static Map<String, LongConsumer> longBinding = Collections.synchronizedMap(new HashMap<>());
-	private static Map<String, IntConsumer> intBinding = Collections.synchronizedMap(new HashMap<>());
-	private static Map<String, Consumer<Float>> floatBinding = Collections.synchronizedMap(new HashMap<>());
-	private static Map<String, DoubleConsumer> doubleBinding = Collections.synchronizedMap(new HashMap<>());
-	private static Map<String, Consumer<Boolean>> booleanBinding = Collections.synchronizedMap(new HashMap<>());
-	private static Map<String, Consumer<String>> stringBinding = Collections.synchronizedMap(new HashMap<>());
-	
+	private static Map<String, Bind<?>> binding = Collections.synchronizedMap(new HashMap<>());
+
+	private static class Bind<T> {
+		public final Class<T> javaType;
+		public final Consumer<T> setter;
+		
+		private Bind(Class<T> jType, Consumer<T> s) {
+			javaType = jType;
+			setter = s;
+		}
+	}
 	
 	/*
 	 * Private static method
 	 */
-	private static synchronized void loadFile(boolean verbose) {
-		if (paramWatcherInstance == null)
+	@SuppressWarnings("unchecked")
+	private static synchronized void loadFile() {
+		if (fileWatcherInstance == null)
 			return;
 		
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			factory.setIgnoringComments(true);
-			DocumentBuilder builder = factory.newDocumentBuilder();
-			Document doc = null;
+			ParameterFile parameterFile = new ParameterFile(fileWatcherInstance.confFile, true, true);
 			
-			do {
-				/* Parfois, le fichier n'est pas lisible au moment de recevoir la
-				 * notification depuis le système de fichier (sûrement car le fichier
-				 * est encore en cours d'écriture)
-				 */
-				try {
-					doc = builder.parse(paramWatcherInstance.confFile);
-				} catch(FileNotFoundException e) {
-					Thread.sleep(50); // attendre avant de réessayer de lire
-				}
-			} while(doc == null);
-			
-			Element parentEl = doc.getDocumentElement();
-			
-			if (!parentEl.getTagName().equalsIgnoreCase("ParamList")) {
-				if (verbose)
-					printError("Settings file does not contains ParamList root node");
-				return;
-			}
-			
-			NodeList paramNodes = parentEl.getChildNodes();
-			
-			for (int i = 0; i < paramNodes.getLength(); i++) {
-				Node node = paramNodes.item(i);
-				if (node.getNodeType() != Node.ELEMENT_NODE)
-					continue;
-				Element el = (Element) node;
+			for (Parameter param : parameterFile.getAll()) {
 				
-				String name = el.getTagName();
-				String value = el.getAttribute("value");
-				String type = el.getAttribute("type").toLowerCase();
-				
-				// apply value to corresponding variable
 				try {
-					if (type.equals("int")) {
-						if (intBinding.containsKey(name)) {
-							intBinding.get(name).accept(Integer.parseInt(value));
+					if (binding.containsKey(param.name)) {
+						@SuppressWarnings("rawtypes")
+						Bind bind = binding.get(param.name);
+						Type t = Type.getTypeFromJavaType(bind.javaType);
+						if (t.parameterClass.isInstance(param)) {
+							bind.setter.accept(Type.getFunctionGetterFromJavaType(bind.javaType, t.parameterClass)
+											.apply(t.parameterClass.cast(param)));
 						}
-						else if (longBinding.containsKey(name)) {
-							longBinding.get(name).accept(Long.parseLong(value));
-						}
-						else if (verbose) {
-							printError("Setting '" + name + "' is not binded to a int or long variable.");
-						}
-					}
-					else if (type.equals("double")) {
-						if (floatBinding.containsKey(name)) {
-							floatBinding.get(name).accept(Float.parseFloat(value));
-						}
-						else if (doubleBinding.containsKey(name)) {
-							doubleBinding.get(name).accept(Double.parseDouble(value));
-						}
-						else if (verbose) {
-							printError("Setting '" + name + "' is not binded to a float or double variable.");
+						else {
+							printError("Setting '" + param.name + "' has type '"+param.getType().name().toLowerCase()+"' in XML file"
+									+ " but is binded to Java type "+bind.javaType.getSimpleName()+".");
 						}
 					}
-					else if (type.equals("bool")) {
-						if (booleanBinding.containsKey(name)) {
-							booleanBinding.get(name).accept(Boolean.parseBoolean(value));
-						}
-						else if (verbose) {
-							printError("Setting '" + name + "' is not binded to a boolean variable.");
-						}
+					else {
+						printError("Setting '" + param.name + "' is not binded to a variable.");
 					}
-					else if (type.equals("string")) {
-						if (stringBinding.containsKey(name)) {
-							stringBinding.get(name).accept(value);
-						}
-						else if (verbose) {
-							printError("Setting '" + name + "' is not binded to a String variable.");
-						}
-					}
-					else if (verbose) {
-						printError("Setting '" + name + "' has an unsupported 'type' attribut");
-					}
+					
 				} catch (NumberFormatException e) {
-					if (verbose)
-						printError("Value for setting '" + name + "' is not a valid " + type + ".");
+					printError("Value for setting '" + param.name + "' is not a valid.");
+					e.printStackTrace();
 				}
-				
-				
 			}
-			
-			
 		} catch (FileNotFoundException e) {
 			printError(e.getMessage());
 		}
@@ -328,19 +168,6 @@ public class ParamTuner extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
-	
-	private static void clearBind(String settingName) {
-		intBinding.remove(settingName);
-		longBinding.remove(settingName);
-		floatBinding.remove(settingName);
-		doubleBinding.remove(settingName);
-		booleanBinding.remove(settingName);
-		stringBinding.remove(settingName);
-	}
-	
-	
-	
 	
 	
 	/*
@@ -387,26 +214,24 @@ public class ParamTuner extends Thread {
 	
 	 */
 	public static synchronized void load(File configFile) {
-		if (paramWatcherInstance != null) {
-			paramWatcherInstance.interrupt();
+		if (fileWatcherInstance != null) {
+			fileWatcherInstance.interrupt();
 		}
 		
 		try {
-			paramWatcherInstance = new ParamTuner(configFile);
+			fileWatcherInstance = new FileWatcher(configFile, fw -> loadFile());
 		} catch (Exception e) {
 			printError("Can't start Watcher thread because of Exception:");
 			e.printStackTrace();
-			paramWatcherInstance = null;
+			fileWatcherInstance = null;
 			return;
 		}
-		paramWatcherInstance.start();
+		fileWatcherInstance.start();
 	}
 	
+	
 	/**
-		Bind a long variable with a parameter in the XML file.<br>
-		<br>
-		The parameter in XML file must be of <code>type="int"</code>, otherwise
-		an error is displayed in terminal.<br>
+		Bind a variable with a parameter in the XML file.<br>
 		<br>
 		This method may be called before or after calling lptLoad().
 		The internal storage of binded values is always preserved.<br>
@@ -414,136 +239,30 @@ public class ParamTuner extends Thread {
 		If a variable is already binded with the specified name, the old
 		binding will be erased.
 		
-		@param settingName the parameter name, that is equal to the node name
+		@param parameterName the parameter name, that is equal to the node name
 		containing the parameter value.
 		
-		@param setter a {@link Consumer} that take the new value on first
-		parameter and may apply this new value to the variable.
+		@param javaType the javaType of the variable that has to be updated.
+				Primitive {@link Class} object are not supported. Please specify wrapper
+				Class object instead (even if your variable is primitive)
+		
+		@param setter a {@link Consumer} that take the new value as parameter
+				and should apply this new value to the variable.
 	*/
-	public static void bindLong(String settingName, LongConsumer setter) {
-		clearBind(settingName);
-		longBinding.put(settingName, setter);
+	public static <T> void bind(String parameterName, Class<T> javaType, Consumer<T> setter) {
+		if (javaType.isPrimitive()) {
+			throw new IllegalArgumentException("Please specify wrapper Class object instead of primitive Class object, on parameter 'javaType'");
+		}
+		if (Type.getTypeFromJavaType(javaType) == null) {
+			throw new IllegalArgumentException("Java type "+javaType.getSimpleName()+" is not supported for binding.");
+		}
+		binding.put(parameterName, new Bind<>(javaType, setter));
 	}
 	
-
-	/**
-		Bind a int variable with a parameter in the XML file.<br>
-		<br>
-		The parameter in XML file must be of <code>type="int"</code>, otherwise
-		an error is displayed in terminal.<br>
-		<br>
-		This method may be called before or after calling lptLoad().
-		The internal storage of binded values is always preserved.<br>
-		<br>
-		If a variable is already binded with the specified name, the old
-		binding will be erased.
-		
-		@param settingName the parameter name, that is equal to the node name
-		containing the parameter value.
-		
-		@param setter a {@link Consumer} that take the new value on first
-		parameter and may apply this new value to the variable.
-	*/
-	public static void bindInt(String settingName, IntConsumer setter) {
-		clearBind(settingName);
-		intBinding.put(settingName, setter);
-	}
 	
-	/**
-		Bind a float variable with a parameter in the XML file.<br>
-		<br>
-		The parameter in XML file must be of <code>type="double"</code>, otherwise
-		an error is displayed in terminal.<br>
-		<br>
-		This method may be called before or after calling lptLoad().
-		The internal storage of binded values is always preserved.<br>
-		<br>
-		If a variable is already binded with the specified name, the old
-		binding will be erased.
-		
-		@param settingName the parameter name, that is equal to the node name
-		containing the parameter value.
-		
-		@param setter a {@link Consumer} that take the new value on first
-		parameter and may apply this new value to the variable.
-	*/
-	public static void bindFloat(String settingName, Consumer<Float> setter) {
-		clearBind(settingName);
-		floatBinding.put(settingName, setter);
+	public static void unbind(String parameterName) {
+		binding.remove(parameterName);
 	}
-
-	
-	/**
-		Bind a double variable with a parameter in the XML file.<br>
-		<br>
-		The parameter in XML file must be of <code>type="double"</code>, otherwise
-		an error is displayed in terminal.<br>
-		<br>
-		This method may be called before or after calling lptLoad().
-		The internal storage of binded values is always preserved.<br>
-		<br>
-		If a variable is already binded with the specified name, the old
-		binding will be erased.
-		
-		@param settingName the parameter name, that is equal to the node name
-		containing the parameter value.
-		
-		@param setter a {@link Consumer} that take the new value on first
-		parameter and may apply this new value to the variable.
-	*/
-	public static void bindDouble(String settingName, DoubleConsumer setter) {
-		clearBind(settingName);
-		doubleBinding.put(settingName, setter);
-	}
-
-	
-	/**
-		Bind a boolean variable with a parameter in the XML file.<br>
-		<br>
-		The parameter in XML file must be of <code>type="bool"</code>, otherwise
-		an error is displayed in terminal.<br>
-		<br>
-		This method may be called before or after calling lptLoad().
-		The internal storage of binded values is always preserved.<br>
-		<br>
-		If a variable is already binded with the specified name, the old
-		binding will be erased.
-		
-		@param settingName the parameter name, that is equal to the node name
-		containing the parameter value.
-		
-		@param setter a {@link Consumer} that take the new value on first
-		parameter and may apply this new value to the variable.
-	*/
-	public static void bindBoolean(String settingName, Consumer<Boolean> setter) {
-		clearBind(settingName);
-		booleanBinding.put(settingName, setter);
-	}
-
-	
-	/**
-		Bind a {@link String} variable with a parameter in the XML file.<br>
-		<br>
-		The parameter in XML file must be of <code>type="string"</code>, otherwise
-		an error is displayed in terminal.<br>
-		<br>
-		This method may be called before or after calling lptLoad().
-		The internal storage of binded values is always preserved.<br>
-		<br>
-		If a variable is already binded with the specified name, the old
-		binding will be erased.
-		
-		@param settingName the parameter name, that is equal to the node name
-		containing the parameter value.
-		
-		@param setter a {@link Consumer} that take the new value on first
-		parameter and may apply this new value to the variable.
-	*/
-	public static void bindString(String settingName, Consumer<String> setter) {
-		clearBind(settingName);
-		stringBinding.put(settingName, setter);
-	}
-	
 	
 	
 }
