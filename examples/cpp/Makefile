@@ -39,14 +39,14 @@ QTINC = $(addprefix -I$(QTINCROOT)/, $(QTINCSUB))
 
 LDINCS = -I../../src/cpp
 
-all: ${TARGET_TEST}
+all: $(TARGET_TEST)
 
 %.o: %.cpp
-	${CXX} -c ${CPPFLAGS} ${LDINCS} ${QTINC} -o $@ $<
+	$(CXX) -c $(CPPFLAGS) $(LDINCS) $(QTINC) -o $@ $<
 
 
 clean:
-	rm -f ${TARGET_LIB} ${TARGET_TEST} *.o moc_* *.exe *.a
+	rm -f $(TARGET_LIB) $(TARGET_TEST) *.o moc_* *.exe *.a
 
 
 .PHONY: clean all
@@ -58,10 +58,10 @@ libParamTuner.a:
 
 # test files
 console_native_linux: libParamTuner.a console_native_linux.o
-	${CXX} ${CPPFLAGS} -o $@ console_native_linux.o -L. -lParamTuner -lpthread
+	$(CXX) $(CPPFLAGS) -o $@ console_native_linux.o -L. -lParamTuner -lpthread
 console_qt_linux: libParamTuner-Qt.a console_qt_linux.o
-	${CXX} ${CPPFLAGS} -o $@ console_qt_linux.o -L. -lParamTuner-Qt -lpthread -lQtGui -lQtCore
+	$(CXX) $(CPPFLAGS) -o $@ console_qt_linux.o -L. -lParamTuner-Qt -lpthread -lQtGui -lQtCore
 console_native_windows: libParamTuner.a console_native_windows.o
-	${CXX} ${CPPFLAGS} -o $@ console_native_windows.o -L. -lParamTuner
+	$(CXX) $(CPPFLAGS) -o $@ console_native_windows.o -L. -lParamTuner
 console_qt_windows: libParamTuner-Qt.a console_qt_windows.o
-	${CXX} ${CPPFLAGS} -o $@ console_qt_windows.o -L. -lParamTuner-Qt -L${QTLIB} -lQtGui4 -lQtCore4
+	$(CXX) $(CPPFLAGS) -o $@ console_qt_windows.o -L. -lParamTuner-Qt -L$(QTLIB) -lQtGui4 -lQtCore4

@@ -38,7 +38,7 @@ QTINC = $(addprefix -I$(QTINCROOT)/, $(QTINCSUB))
 DOCDIR = ../../doc/cpp
 
 
-all: ${TARGET_LIB}
+all: $(TARGET_LIB)
 
 doc:
 	mkdir -p $(DOCDIR) && doxygen doxygen.conf
@@ -46,20 +46,20 @@ doc:
 # ligne de compilation spécifique pour la version Qt car on passe
 # un define en option : -DFILE_SYSTEM_WATCHER_USE_QT
 libparamtuner-Qt.o: libparamtuner.cpp
-	${CXX} -DFILE_SYSTEM_WATCHER_USE_QT ${QTINC} -c ${CPPFLAGS} ${LDINCS} -o $@ $<
+	$(CXX) -DFILE_SYSTEM_WATCHER_USE_QT $(QTINC) -c $(CPPFLAGS) $(LDINCS) -o $@ $<
 
 %.o: %.cpp
-	${CXX} -c ${CPPFLAGS} ${LDINCS} ${QTINC} -o $@ $<
+	$(CXX) -c $(CPPFLAGS) $(LDINCS) $(QTINC) -o $@ $<
 
 moc_%.cpp: %.hpp
-	${MOC} $(INCPATH) $< -o $@
+	$(MOC) $(INCPATH) $< -o $@
 
 
-${TARGET_LIB}:
-	${AR} $@ $^
+$(TARGET_LIB):
+	$(AR) $@ $^
 
 clean:
-	rm -rf ${TARGET_LIB} *.o moc_* *.exe ${DOCDIR}
+	rm -rf $(TARGET_LIB) *.o moc_* *.exe $(DOCDIR)
 
 .PHONY: clean all doc
 

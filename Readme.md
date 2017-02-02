@@ -87,8 +87,6 @@ then you can put the path to the XML directly into the GUI.
 
 ## TODO list :
 
-* Add licences and copyright to file headers
-* Use () in Makefiles instead of {}
 * Add graphical examples (Java Swing ? )
 * Create unit test files for C++ and Java lib
 * Add Mac-OS compatibility to C++ library
