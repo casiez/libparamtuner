@@ -88,7 +88,6 @@ then you can put the path to the XML directly into the GUI.
 ## TODO list :
 
 * Add licences and copyright to file headers
-* Change package name in Java : remove "pji"
 * Use () in Makefiles instead of {}
 * Add graphical examples (Java Swing ? )
 * Create unit test files for C++ and Java lib

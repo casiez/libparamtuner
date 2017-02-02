@@ -1,6 +1,6 @@
 /*
  *  libParamTuner
- *  Copyright (C) 2017 Marc Baloup, Veïs Oudjail
+ *  Copyright (C) 2017 Gery Casiez, Marc Baloup, Veïs Oudjail
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,13 +15,3 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.univ_lille1.pji.libparamtuner.gui.parameters_panel;
-
-import java.awt.Panel;
-
-public abstract class ParameterPanel extends Panel {
-	private static final long serialVersionUID = 1L;
-	
-	// TODO
-	
-}
