@@ -8,11 +8,11 @@
 #ifdef FILE_SYSTEM_WATCHER_USE_QT
 	#include "QtFileSystemWatcher.hpp"
 #elif defined __linux__
-	#include "InotifyFileSystemWatcher.hpp"
+	#include "linux/InotifyFileSystemWatcher.hpp"
 #elif defined __APPLE__
 
 #elif defined _WIN32
-	#include "Win32FileSystemWatcher.hpp"
+	#include "windows/Win32FileSystemWatcher.hpp"
 #endif
 
 

@@ -11,7 +11,7 @@
 		min=/max= : only for numeric types. Used by GUI to limit value for a slider.
 	 -->
 	<setting1 value="2.3" type="double" min="0" max="100"/>
-	<setting2 value="2" type="int" min="0" max="100"/>
+	<setting2 value="6" type="int" min="0" max="100"/>
 	<mybool value="true" type="bool"/>
 	<mystring value="fbvqfdgsh" type="string"/>
 </ParamList>

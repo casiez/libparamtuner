@@ -1,0 +1,10 @@
+# Generated files
+*.o
+*.a
+
+# Executables
+*.exe
+test_nativ_linux
+test_qt_linux
+test_nativ_windows
+test_qt_windows
