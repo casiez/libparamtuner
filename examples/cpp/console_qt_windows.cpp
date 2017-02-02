@@ -53,11 +53,11 @@ int main(int argc, char* argv[]) {
 
 	QApplication app(argc, argv);
 	
-	lptLoad("settings.xml");
-	lptBind("setting1", &varDouble);
-	lptBind("setting2", &varInt);
-	lptBind("mybool", &varBool);
-	lptBind("mystring", &varString);
+	ParamTuner::load("settings.xml");
+	ParamTuner::bind("setting1", &varDouble);
+	ParamTuner::bind("setting2", &varInt);
+	ParamTuner::bind("mybool", &varBool);
+	ParamTuner::bind("mystring", &varString);
 
 	CreateThread(nullptr, 0, originalMainLoop, nullptr, 0, nullptr);
 

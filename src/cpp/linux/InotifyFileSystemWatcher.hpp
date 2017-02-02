@@ -1,7 +1,7 @@
 #ifndef INOTIFY_FILE_SYSTEM_WATCHER_HPP
 #define INOTIFY_FILE_SYSTEM_WATCHER_HPP
 
-#include "FileSystemWatcher.hpp"
+#include "../FileSystemWatcher.hpp"
 
 #include <sys/inotify.h>
 #include <thread>

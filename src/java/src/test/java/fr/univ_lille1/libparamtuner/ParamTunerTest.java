@@ -1,4 +1,4 @@
-package fr.univ_lille1.pji.libparamtuner;
+package fr.univ_lille1.libparamtuner;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -6,6 +6,8 @@ import java.nio.file.StandardCopyOption;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import fr.univ_lille1.libparamtuner.ParamTuner;
 
 public class ParamTunerTest {
 	

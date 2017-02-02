@@ -1,4 +1,4 @@
-package fr.univ_lille1.pji.libparamtuner;
+package fr.univ_lille1.libparamtuner;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,9 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import fr.univ_lille1.pji.libparamtuner.parameters.Parameter;
-import fr.univ_lille1.pji.libparamtuner.parameters.Type;
-import fr.univ_lille1.pji.libparamtuner.parameters.ParameterFile;
+import fr.univ_lille1.libparamtuner.parameters.Parameter;
+import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
+import fr.univ_lille1.libparamtuner.parameters.Type;
 
 /**
  * Class allowing developers to set up internal software settings in real-time.

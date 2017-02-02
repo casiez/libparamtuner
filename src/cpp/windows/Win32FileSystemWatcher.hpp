@@ -1,7 +1,7 @@
 #ifndef WIN32_FILE_SYSTEM_WATCHER_HPP
 #define WIN32_FILE_SYSTEM_WATCHER_HPP
 
-#include "FileSystemWatcher.hpp"
+#include "../FileSystemWatcher.hpp"
 
 #include <windows.h>
 #include <tchar.h>

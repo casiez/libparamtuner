@@ -1,8 +1,7 @@
 # libParamTuner
 
-Cross-platform library to easily tune parameters in C++ and Java
-apps using xml files. It avoid repetitively compile a whole software
-every time we need to change a constant value inside the source code.
+Cross-platform library to ease the interactive tuning of parameters
+without the need to recompile code.
 
 ## C++ Library
 

@@ -19,23 +19,23 @@
 using namespace std;
 
 int main() {
-	double s1 = 2.0;
-	int s2 = 1;
-	bool b = false;
-	string s;
+	double varDouble = 2.0;
+	int varInt = 1;
+	bool varBool = false;
+	string varString;
 
-	lptLoad("settings.xml");
-	lptBind("setting1", &s1);
-	lptBind("setting2", &s2);
-	lptBind("mybool", &b);
-	lptBind("mystring", &s);
+	ParamTuner::load("settings.xml");
+	ParamTuner::bind("setting1", &varDouble);
+	ParamTuner::bind("setting2", &varInt);
+	ParamTuner::bind("mybool", &varBool);
+	ParamTuner::bind("mystring", &varString);
 
 	while (true) {
 		Sleep(500); // 500 ms
-		cout << "setting1 (double) = " << s1
-			<< " ; setting2 (int) = " << s2
-			<< " ; mybool (bool) = " << b
-			<< " ; mystring (string) = " << s
+		cout << "setting1 (double) = " << varDouble
+			<< " ; setting2 (int) = " << varInt
+			<< " ; mybool (bool) = " << varBool
+			<< " ; mystring (string) = " << varString
 			<< endl;
 	}
 

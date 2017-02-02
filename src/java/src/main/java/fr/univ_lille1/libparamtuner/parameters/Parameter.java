@@ -1,4 +1,4 @@
-package fr.univ_lille1.pji.libparamtuner.parameters;
+package fr.univ_lille1.libparamtuner.parameters;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

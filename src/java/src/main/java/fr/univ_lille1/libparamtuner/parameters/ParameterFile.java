@@ -1,4 +1,4 @@
-package fr.univ_lille1.pji.libparamtuner.parameters;
+package fr.univ_lille1.libparamtuner.parameters;
 
 import java.io.File;
 import java.io.IOException;
