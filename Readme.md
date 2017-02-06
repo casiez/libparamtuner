@@ -1,8 +1,39 @@
 # libParamTuner
 
-Cross-platform library to ease the interactive tuning of parameters
-without the need to recompile code.
+Cross-platform library to ease the interactive tuning of parameters without the need to recompile code.
 
+## Minimal example
+```
+#include <iostream>
+#include <string>
+#include <unistd.h>
+#include "libparamtuner.h"
+using namespace std;
+
+int main() {
+	double varDouble = 2.0;
+	int varInt = 1;
+	bool varBool = false;
+	string varString;
+
+	// Loads settings.xml file where each parameter is defined
+	ParamTuner::load("settings.xml");
+	ParamTuner::bind("setting1", &varDouble);
+	ParamTuner::bind("setting2", &varInt);
+	ParamTuner::bind("mybool", &varBool);
+	ParamTuner::bind("mystring", &varString);
+
+	while (true) {
+		// Modifying and saving the xml file will update the values in the console
+		usleep(1000*500); // 500 ms
+		cout << "setting1 (double) = " << varDouble
+			<< " ; setting2 (int) = " << varInt
+			<< " ; mybool (bool) = " << varBool
+			<< " ; mystring (string) = " << varString
+			<< endl;
+	}
+}
+```
 ## C++ Library
 
 The C++ libParamTuner library can be compiled for 2 purpose :
