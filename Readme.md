@@ -18,6 +18,7 @@ int main() {
 
 	// Loads settings.xml file where each parameter is defined
 	ParamTuner::load("settings.xml");
+	// Binds each parameter of the xml file to a variable
 	ParamTuner::bind("setting1", &varDouble);
 	ParamTuner::bind("setting2", &varInt);
 	ParamTuner::bind("mybool", &varBool);
