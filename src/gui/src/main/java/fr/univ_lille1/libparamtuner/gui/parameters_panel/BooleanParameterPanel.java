@@ -15,12 +15,12 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.univ_lille1.pji.libparamtuner.gui.parameters_panel;
+package fr.univ_lille1.libparamtuner.gui.parameters_panel;
 
 import javax.swing.JCheckBox;
 
+import fr.univ_lille1.libparamtuner.gui.MainFrame;
 import fr.univ_lille1.libparamtuner.parameters.BooleanParameter;
-import fr.univ_lille1.pji.libparamtuner.gui.MainFrame;
 
 public class BooleanParameterPanel extends ParameterPanel {
 	private static final long serialVersionUID = 1L;

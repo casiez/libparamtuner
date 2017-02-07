@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.univ_lille1.pji.libparamtuner.gui.parameters_panel;
+package fr.univ_lille1.libparamtuner.gui.parameters_panel;
 
 import java.awt.Color;
 
@@ -24,12 +24,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import fr.univ_lille1.libparamtuner.gui.MainFrame;
 import fr.univ_lille1.libparamtuner.parameters.BooleanParameter;
 import fr.univ_lille1.libparamtuner.parameters.FloatParameter;
 import fr.univ_lille1.libparamtuner.parameters.IntegerParameter;
 import fr.univ_lille1.libparamtuner.parameters.Parameter;
 import fr.univ_lille1.libparamtuner.parameters.StringParameter;
-import fr.univ_lille1.pji.libparamtuner.gui.MainFrame;
 
 public abstract class ParameterPanel extends JPanel {
 	private static final long serialVersionUID = 1L;

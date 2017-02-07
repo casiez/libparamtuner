@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.univ_lille1.pji.libparamtuner.gui;
+package fr.univ_lille1.libparamtuner.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
@@ -27,11 +27,9 @@ import javax.swing.border.EmptyBorder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import fr.univ_lille1.libparamtuner.parameters.BooleanParameter;
+import fr.univ_lille1.libparamtuner.gui.parameters_panel.ParameterPanel;
 import fr.univ_lille1.libparamtuner.parameters.Parameter;
 import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
-import fr.univ_lille1.pji.libparamtuner.gui.parameters_panel.BooleanParameterPanel;
-import fr.univ_lille1.pji.libparamtuner.gui.parameters_panel.ParameterPanel;
 
 import javax.swing.BoxLayout;
 import java.awt.Toolkit;
@@ -208,14 +206,12 @@ public class MainFrame extends JFrame {
 	
 	
 	private void clearConfigEntries() {
-		System.out.println("Remove all");
 		contentPanel.removeAll();
 		contentPanel.revalidate();
 		contentPanel.repaint();
 	}
 	
 	private void addConfigEntry(Parameter p) {
-		System.out.println("Add "+p.name+" "+p.getClass().getName());
 		contentPanel.add(ParameterPanel.fromParameter(this, contentPanel.getComponentCount(), p));
 		contentPanel.revalidate();
 		contentPanel.repaint();

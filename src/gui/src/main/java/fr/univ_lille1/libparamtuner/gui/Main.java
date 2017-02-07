@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package fr.univ_lille1.pji.libparamtuner.gui;
+package fr.univ_lille1.libparamtuner.gui;
 
 import java.awt.EventQueue;
 import java.awt.GraphicsEnvironment;
