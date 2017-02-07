@@ -4,7 +4,7 @@
 
 # Executables
 *.exe
-test_nativ_linux
-test_qt_linux
-test_nativ_windows
-test_qt_windows
+console_native_linux
+console_qt_linux
+console_native_windows
+console_qt_windows
