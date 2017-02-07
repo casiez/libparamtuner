@@ -1,6 +1,7 @@
 
 # Maven
 /target/
+dependency-reduced-pom.xml
 
 # Eclipse projects
 .settings
