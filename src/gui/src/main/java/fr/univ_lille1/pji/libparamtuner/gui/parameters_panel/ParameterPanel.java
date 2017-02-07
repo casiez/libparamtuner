@@ -17,11 +17,64 @@
  */
 package fr.univ_lille1.pji.libparamtuner.gui.parameters_panel;
 
-import java.awt.Panel;
+import java.awt.Color;
 
-public abstract class ParameterPanel extends Panel {
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import fr.univ_lille1.libparamtuner.parameters.BooleanParameter;
+import fr.univ_lille1.libparamtuner.parameters.FloatParameter;
+import fr.univ_lille1.libparamtuner.parameters.IntegerParameter;
+import fr.univ_lille1.libparamtuner.parameters.Parameter;
+import fr.univ_lille1.libparamtuner.parameters.StringParameter;
+import fr.univ_lille1.pji.libparamtuner.gui.MainFrame;
+
+public abstract class ParameterPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
-	// TODO
+	protected final MainFrame frame;
+	protected final Parameter parameter;
+	
+	public ParameterPanel(MainFrame f, int index, Parameter p) {
+		frame = f;
+		parameter = p;
+		
+		setBackground((index % 2 == 0) ? new Color(215, 215, 215) : new Color(225, 225, 225));
+		setBorder(new EmptyBorder(2, 2, 2, 2));
+		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+		
+		add(new JLabel(p.name));
+		
+	}
+	
+	
+	public void notifyContentModification() {
+		frame.onContentModify();
+	}
+	
+	
+	
+	
+	
+	
+	public static ParameterPanel fromParameter(MainFrame f, int index, Parameter p) {
+		if (p instanceof BooleanParameter) {
+			return new BooleanParameterPanel(f, index, (BooleanParameter)p);
+		}
+		if (p instanceof FloatParameter) {
+			return new FloatParameterPanel(f, index, (FloatParameter)p);
+		}
+		if (p instanceof IntegerParameter) {
+			return new IntegerParameterPanel(f, index, (IntegerParameter)p);
+		}
+		if (p instanceof StringParameter) {
+			return new StringParameterPanel(f, index, (StringParameter)p);
+		}
+		
+		throw new IllegalArgumentException("Unsupported Parameter type : "+p.getClass().getName());
+	}
+	
 	
 }

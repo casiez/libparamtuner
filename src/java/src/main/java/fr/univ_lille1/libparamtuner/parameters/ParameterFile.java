@@ -128,15 +128,13 @@ public class ParameterFile {
 	
 	
 	
-	public void save() {
-		try {
+	public void save() throws TransformerException, ParserConfigurationException {
+		
 		Transformer tf = TransformerFactory.newInstance().newTransformer();
 		tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		tf.setOutputProperty(OutputKeys.INDENT, "yes");
 		tf.transform(new DOMSource(createXMLDocument()), new StreamResult(file));
-		} catch(TransformerException | ParserConfigurationException e) {
-			e.printStackTrace();
-		}
+		
 	}
 	
 	

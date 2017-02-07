@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ParamList>
+<mybool type="bool" value="false"/>
+<mystring type="string" value=""/>
+<setting1 max="1000.0" min="0.0" type="double" value="0.0"/>
+<setting2 max="10.0" min="0.0" type="int" value="0"/>
+</ParamList>
