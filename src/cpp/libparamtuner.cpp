@@ -26,6 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 using namespace rapidxml;
 using namespace std;

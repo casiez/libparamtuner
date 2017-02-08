@@ -27,7 +27,7 @@
 #elif defined __linux__
 	#include "linux/InotifyFileSystemWatcher.hpp"
 #elif defined __APPLE__
-
+	#include "osx/FSEventsFileSystemWatcher.hpp"
 #elif defined _WIN32
 	#include "windows/Win32FileSystemWatcher.hpp"
 #endif
@@ -43,7 +43,7 @@ FileSystemWatcher* createFileSystemWatcher(const std::string &path, voidfunc cal
 	#elif defined __linux__
 		return new InotifyFileSystemWatcher(path, callback);
 	#elif defined __APPLE__
-		#error "not yet implemented"
+		return new FSEventsFileSystemWatcher(path, callback);
 	#elif defined _WIN32
 		return new Win32FileSystemWatcher(path, callback);
 	#else
