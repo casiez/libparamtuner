@@ -25,6 +25,7 @@
 
 #include <CoreServices/CoreServices.h>
 #include <thread>
+#include <iostream>
 
 class FSEventsFileSystemWatcher : public FileSystemWatcher {
 
@@ -37,15 +38,16 @@ protected:
 	static void mycallback(ConstFSEventStreamRef /*streamRef*/, void *clientCallBackInfo, size_t /*numEvents*/,
 	    void */*eventPaths*/, const FSEventStreamEventFlags /*eventFlags*/[], const FSEventStreamEventId /*eventIds*/[])
 	{
-	 	FSEventStreamContext *context = (FSEventStreamContext*)clientCallBackInfo;
-	 	FSEventsFileSystemWatcher *sysWatcher = (FSEventsFileSystemWatcher*)context->info;
-	 	printf("coucou0\n");
-	 	sysWatcher->update();
+	 	FSEventsFileSystemWatcher *sysWatcher = (FSEventsFileSystemWatcher*)clientCallBackInfo;
+	 	sysWatcher->callSystemWatcher();
+	}
+
+	void callSystemWatcher() {
+		FileSystemWatcher::receiveSignal();
 	}
 
 	virtual void update() {
-		printf("coucou\n");
-		FileSystemWatcher::receiveSignal();
+
 	}
 
 	void async() {
