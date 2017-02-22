@@ -26,7 +26,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <vector>
+#include <exception>
 
 using namespace rapidxml;
 using namespace std;
@@ -47,17 +47,28 @@ namespace ParamTuner {
 
 	double string_to_double(const string & str)
 	{
-		double dest;
-		istringstream iss(str);
-		iss >> dest;
-		return dest;
+		try {
+			double dest;
+			istringstream iss(str);
+			iss >> dest;
+			return dest;
+		} catch (const exception& e) {
+			cerr << "std::exception thrown in string_to_double: " << e.what() << endl;
+			return 0;
+		}
+
 	}
 	int string_to_int(const string & str)
 	{
-		int dest;
-		istringstream iss(str);
-		iss >> dest;
-		return dest;
+		try {
+			int dest;
+			istringstream iss(str);
+			iss >> dest;
+			return dest;
+		} catch (const exception& e) {
+			cerr << "std::exception thrown in string_to_int: " << e.what() << endl;
+			return 0;
+		}
 	}
 
 	void loadFile(bool verbose)
