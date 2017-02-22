@@ -35,28 +35,20 @@ int main() {
 	}
 }
 ```
+
+
+
 ## C++ Library
 
-The C++ libParamTuner library can be compiled for 2 purpose :
-
-* If you develop Qt Application, libParamTuner use [QFileSystemWatcher](http://doc.qt.io/qt-4.8/qfilesystemwatcher.html) class
-* For other C++ developers, libParamTuner use system-dependent libraries that are
-  already installed in their respective OS :
-    * Windows ([FindFirstChangeNotification() function](https://msdn.microsoft.com/en-us/library/aa364417%28VS.85%29.aspx))
-    * Linux (kernel > 2.6.13, with [Inotify](https://en.wikipedia.org/wiki/Inotify))
-	* Mac OS X (version > 10.5, with [FSEvents](https://developer.apple.com/library/content/documentation/Darwin/Conceptual/FSEvents_ProgGuide/Introduction/Introduction.html))
+The C++ libParamTuner library use system-dependent libraries
+that are already installed in their respective OS :
+* Windows ([FindFirstChangeNotification() function](https://msdn.microsoft.com/en-us/library/aa364417%28VS.85%29.aspx))
+* Linux (kernel > 2.6.13, with [Inotify](https://en.wikipedia.org/wiki/Inotify))
+* Mac OS X (version > 10.5, with [FSEvents](https://developer.apple.com/library/content/documentation/Darwin/Conceptual/FSEvents_ProgGuide/Introduction/Introduction.html))
 
 ### Compilation
 
-For Qt 4.8+ applications
-
-* In directory `src/cpp`, run `make libParamTuner-Qt.a`
-* Library file : `libParamTuner-Qt.a`
-* Header file : `libparamtuner.h`
-
-For native Windows, Linux (and Mac OS ? ) C++ applications
-
-* In directory `src/cpp`, run `make libParamTuner.a`
+* In directory `src/cpp`, run `make`
 * Library file : `libParamTuner.a`
 * Header file : `libparamtuner.h`
 
@@ -64,12 +56,11 @@ For native Windows, Linux (and Mac OS ? ) C++ applications
 
 Read detailed documentation in the header file `libparamtuner.h`
 
-### Test files
+### Example files
 
-Some 'test_*.cpp' files are available in `cpplib` directory.
+Some examples files are available in `examples/cpp` directory.
 You can compile them with `make [C++ filename without extension]` command.
-`native` and `qt` tests are respectively for native OS dependant libraries and for
-Qt libraries.
+
 
 
 ## Java 8+ Library
@@ -83,12 +74,13 @@ it in an other Maven project.
 
 To use it in a Maven project, add theses lines in your POM's
 `<dependencies>` section :
-
-    <dependency>
-        <groupId>fr.univ_lille1.pji.libparamtuner</groupId>
-        <artifactId>libParamTuner</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
-    <dependency>
+```
+<dependency>
+	<groupId>fr.univ_lille1.pji.libparamtuner</groupId>
+	<artifactId>libParamTuner</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+<dependency>
+```
 
 If you have a non-Maven project, just add `libParamTuner.jar` to the
 build path of your project.
@@ -96,9 +88,11 @@ build path of your project.
 To get the javadoc, run `mvn javadoc:javadoc` , then go to the subdirectory
 `target/site/apidocs`
 
+
+
 ## ParamTuner GUI
 
-This Java (Swing) interface will allow developers to change value in
+This Java (Swing) interface allow developers to change value in
 real-time without having to edit the settings file manually.
 
 ### Compilation
@@ -121,6 +115,5 @@ then you can put the path to the XML directly into the GUI.
 
 * Add graphical examples (Java Swing ? )
 * Create unit test files for C++ and Java lib
-* Add Mac-OS compatibility to C++ library
 * Make the GUI
 * Configure CI via Github if possible.

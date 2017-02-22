@@ -22,9 +22,7 @@
 
 
 
-#ifdef FILE_SYSTEM_WATCHER_USE_QT
-	#include "QtFileSystemWatcher.hpp"
-#elif defined __linux__
+#if defined __linux__
 	#include "linux/InotifyFileSystemWatcher.hpp"
 #elif defined __APPLE__
 	#include "osx/FSEventsFileSystemWatcher.hpp"
@@ -38,9 +36,7 @@
 
 FileSystemWatcher* createFileSystemWatcher(const std::string &path, voidfunc callback) {
 	
-	#ifdef FILE_SYSTEM_WATCHER_USE_QT
-		return new QtFileSystemWatcher(path, callback);
-	#elif defined __linux__
+	#if defined __linux__
 		return new InotifyFileSystemWatcher(path, callback);
 	#elif defined __APPLE__
 		return new FSEventsFileSystemWatcher(path, callback);

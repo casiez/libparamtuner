@@ -4,7 +4,5 @@
 
 # Executables
 *.exe
-console_native_linux
-console_qt_linux
-console_native_windows
-console_qt_windows
+console_linux
+console_windows
