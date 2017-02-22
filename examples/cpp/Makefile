@@ -17,7 +17,7 @@
 #
 CXX = g++
 
-TARGET_TEST = console_linux console_windows \
+TARGETS = console_linux console_windows \
 
 
 CPPFLAGS = -std=c++11 -Wall -Wextra -Wno-unused-parameter
@@ -28,14 +28,14 @@ endif
 
 LDINCS = -I../../src/cpp
 
-all: $(TARGET_TEST)
+all: $(TARGETS)
 
 %.o: %.cpp
 	$(CXX) -c $(CPPFLAGS) $(LDINCS) -o $@ $<
 
 
 clean:
-	rm -f $(TARGET_TEST) *.o *.exe *.a
+	rm -f $(TARGETS) *.o *.exe *.a
 
 
 .PHONY: clean all
@@ -43,7 +43,7 @@ clean:
 libParamTuner.a:
 	cd ../../src/cpp && make libParamTuner.a && cp libParamTuner.a ../../examples/cpp/
 
-# test files
+# targets
 console_linux: libParamTuner.a console_linux.o
 	$(CXX) $(CPPFLAGS) -o $@ console_linux.o -L. -lParamTuner -lpthread
 console_windows: libParamTuner.a console_windows.o

@@ -75,7 +75,7 @@ namespace ParamTuner {
 	{
 		if (!watcher)
 			return;
-		// inspiré de https://gist.github.com/JSchaenzle/2726944
+		// based on https://gist.github.com/JSchaenzle/2726944
 		try {
 		
 			xml_document<> doc;
@@ -95,7 +95,7 @@ namespace ParamTuner {
 					cerr << "Settings file does not contains ParamList root node" << endl;
 				return;
 			}
-			// Iterate over the brewerys
+			// Iterate over the parameters
 			for (xml_node<> * param_node = root_node->first_node(); param_node; param_node = param_node->next_sibling())
 			{
 				string name(param_node->name());
@@ -162,12 +162,13 @@ namespace ParamTuner {
 	int load(const string &path)
 	{
 		binding.clear();
-		if (watcher) { delete watcher; }
+		if (watcher)
+			delete watcher;
 
-		// Construit l'objet permettant de surveiller le fichier de config
+		// Construct the file system watcher depending on current OS
 		watcher = createFileSystemWatcher(path, fileModificationCallback);
-		// Verifie que la construction s'est bien passé
-		if (!watcher) { return -1; }
+		if (!watcher)
+			return -1;
 
 		return 0;
 	}

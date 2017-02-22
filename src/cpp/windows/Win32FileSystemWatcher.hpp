@@ -58,19 +58,19 @@ protected:
 					if (CompareFileTime(&newTime, &(_this.lastModifTime)) != 0) {
 						_this.lastModifTime = newTime;
 						
-						/*  Il semblerai que Windows envoi le signal avant même
-							que la dernière version du fichier soit complètement
-							écrit sur le disque. De ce cas, le parseur XML lançait
-							une exception.
-							Le retard de 30ms laisse le temps au fichier d'être
-							réellement sauvegardé.
+						/*
+							It seems that Windows send the signal before the file
+							has finished his update. In this case, the XML parser
+							throws an exception.
+							We add a timeout of 30ms to allow the file to be
+							fully written to disk
 						*/
 						Sleep(30);
 						_this.receiveSignal();
 					}
 					break;
 				case WAIT_TIMEOUT:
-					// Ne devrait pas survenir car le temps d'attente est INFINITE.
+					// Should not happen since the timeout is set to INFINITE
 					std::cerr << "No changes in the timeout period." << std::endl;
 					break;
 				default:

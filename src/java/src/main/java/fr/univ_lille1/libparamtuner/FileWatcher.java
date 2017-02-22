@@ -47,7 +47,7 @@ public class FileWatcher extends Thread {
 		
 		parentPath = confFile.getParentFile().toPath();
 		
-		// initilaise a new watcher service
+		// initialize a new watcher service
 		watcher = FileSystems.getDefault().newWatchService();
 		
 		key = parentPath.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -56,9 +56,12 @@ public class FileWatcher extends Thread {
 	@Override
 	public void run() {
 		try {
+			/*
+			 * Based on https://docs.oracle.com/javase/tutorial/essential/io/examples/WatchDir.java
+			 */
 			for (;;) {
 				
-				// wait for key to be signalled
+				// wait for key to be signaled
 				WatchKey key;
 				try {
 					key = watcher.take();

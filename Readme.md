@@ -115,5 +115,6 @@ then you can put the path to the XML directly into the GUI.
 
 * Add graphical examples (Java Swing ? )
 * Create unit test files for C++ and Java lib
-* Make the GUI
+* Update the GUI (See TODO comments in source code)
 * Configure CI via Github if possible.
+* Merge console's examples in examples/cpp

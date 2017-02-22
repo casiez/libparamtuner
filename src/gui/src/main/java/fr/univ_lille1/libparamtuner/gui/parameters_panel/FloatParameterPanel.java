@@ -28,7 +28,7 @@ import fr.univ_lille1.libparamtuner.parameters.FloatParameter;
 public class FloatParameterPanel extends ParameterPanel {
 	private static final long serialVersionUID = 1L;
 	
-	private static final int SLIDER_PRECISION = 1000; // TODO adapter pour régler les soucis de précisions
+	private static final int SLIDER_PRECISION = 1000; // TODO fix precision issue
 	
 	private JSlider slider = null;
 

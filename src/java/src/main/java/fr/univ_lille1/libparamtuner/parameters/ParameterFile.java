@@ -66,17 +66,22 @@ public class ParameterFile {
 			Document doc = null;
 			int i = 0;
 			do {
-				/* Parfois, le fichier n'est pas lisible au moment de recevoir la
-				 * notification depuis le système de fichier (sûrement car le fichier
-				 * est encore en cours d'écriture)
+				/*
+				 * Sometimes, the file is not readable when we receive the notification
+				 * from the watcher (surely because an other software is still writing
+				 * in the file). We try multiple times to read the file until it
+				 * succeeds.
 				 */
 				try {
 					doc = builder.parse(file);
 				} catch(IOException e) {
-					i++; // itérateur si jamais le fichier n'existe vraiment plus, on ne boucle pas à l'infini
+					/* In case of the file will not readable anymore (deleted ? )
+					 * we count and stop if we've done to many trials
+					 */
+					i++;
 					if (i >= 10 || !retryLoading)
 						throw e;
-					Thread.sleep(50); // attendre avant de réessayer de lire
+					Thread.sleep(50); // Wait before retry
 				}
 			} while(doc == null);
 			readDocument(doc);

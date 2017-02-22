@@ -61,7 +61,7 @@ public class ParamTunerTest {
 	
 	@Test
 	public void testMain() throws Throwable {
-		// utilisation de ParamTuner :
+		// ParamTuner usage:
 		ParamTuner.load(watchedPath);
 		ParamTuner.bind("setting1", Double.class, v -> setting1 = v);
 		ParamTuner.bind("setting2", Integer.class, v -> setting2 = v);
@@ -69,7 +69,7 @@ public class ParamTunerTest {
 		ParamTuner.bind("mystring", String.class, v -> mystring = v);
 		
 		
-		// thread qui va provoquer automatiquement un changement dans le fichier settings.xml
+		// thread that simulate external software which modify the file settings.xml
 		Thread t = new Thread(() -> {
 			try {
 				for(int i = 0; ; i++) {
@@ -88,7 +88,7 @@ public class ParamTunerTest {
 		t.start();
 		
 		
-		// boucle du programme principal
+		// main loop
 		for(int i = 0; i < 25; i++) {
 			Thread.sleep(200);
 			System.out.println("setting1 (double) = "+setting1
