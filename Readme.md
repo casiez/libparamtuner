@@ -6,8 +6,16 @@ Cross-platform library to ease the interactive tuning of parameters without the 
 ```
 #include <iostream>
 #include <string>
-#include <unistd.h>
-#include "libparamtuner.h"
+#include "paramtuner.h"
+
+#ifdef _WIN32
+#   include <windows.h>
+#   define SLEEP(ms) (Sleep(ms))
+#else 
+#   include <unistd.h> 
+#   define SLEEP(ms) (usleep(ms * 1000))
+#endif 
+
 using namespace std;
 
 int main() {
@@ -16,17 +24,14 @@ int main() {
 	bool varBool = false;
 	string varString;
 
-	// Loads settings.xml file where each parameter is defined
 	ParamTuner::load("settings.xml");
-	// Binds each parameter of the xml file to a variable
 	ParamTuner::bind("setting1", &varDouble);
 	ParamTuner::bind("setting2", &varInt);
 	ParamTuner::bind("mybool", &varBool);
 	ParamTuner::bind("mystring", &varString);
 
 	while (true) {
-		// Modifying and saving the xml file will update the values in the console
-		usleep(1000*500); // 500 ms
+		SLEEP(500); // 500 ms
 		cout << "setting1 (double) = " << varDouble
 			<< " ; setting2 (int) = " << varInt
 			<< " ; mybool (bool) = " << varBool
@@ -50,11 +55,11 @@ that are already installed in their respective OS :
 
 * In directory `src/cpp`, run `make`
 * Library file : `libparamtuner.a`
-* Header file : `libparamtuner.h`
+* Header file : `paramtuner.h`
 
 ### Usage and documentation
 
-Read detailed documentation in the header file `libparamtuner.h`
+Read detailed documentation in the header file `paramtuner.h`
 
 ### Example files
 
@@ -117,4 +122,3 @@ then you can put the path to the XML directly into the GUI.
 * Create unit test files for C++ and Java lib
 * Update the GUI (See TODO comments in source code)
 * Configure CI via Github if possible.
-* Merge console's examples in examples/cpp

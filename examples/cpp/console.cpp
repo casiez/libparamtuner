@@ -51,5 +51,4 @@ int main() {
 			<< " ; mystring (string) = " << varString
 			<< endl;
 	}
-
 }

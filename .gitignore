@@ -6,6 +6,14 @@ ehthumbs.db
 Icon?
 Thumbs.db
 
+# App generated files #
+###################### 
+# Vim 
+*.swp
+
+# Kate
+*.kate-swp
+
 # Folder ignore #
 #################
 doc
