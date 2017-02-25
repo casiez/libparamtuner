@@ -39,7 +39,7 @@ doc:
 	$(CXX) -c $(CPPFLAGS) $(LDINCS) -o $@ $<
 
 
-$(TARGET_LIB): libparamtuner.o
+$(TARGET_LIB): paramtuner.o
 	$(AR) $@ $^
 
 clean:

@@ -15,7 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#include "libparamtuner.h"
+#include "paramtuner.h"
 
 #include "FileSystemWatcher.hpp"
 #include "FileSystemWatcherFactory.hpp"
@@ -36,17 +36,13 @@ using namespace std;
 namespace ParamTuner {
 
 	// Data structure
-
-
-
 	std::map<std::string, void*> binding;
 
 	FileSystemWatcher* watcher;
 
 
 	// Private function
-
-	double string_to_double(const string & str)
+	double stringToDouble(const string & str)
 	{
 		try {
 			double dest;
@@ -59,7 +55,8 @@ namespace ParamTuner {
 		}
 
 	}
-	int string_to_int(const string & str)
+	
+	int stringToInt(const string & str)
 	{
 		try {
 			int dest;
@@ -129,10 +126,10 @@ namespace ParamTuner {
 					*((string*)binding[name]) = value;
 				}
 				else if (type == "int") {
-					*((int*)binding[name]) = string_to_int(value);
+					*((int*)binding[name]) = stringToInt(value);
 				}
 				else if (type == "double") {
-					*((double*)binding[name]) = string_to_double(value);
+					*((double*)binding[name]) = stringToDouble(value);
 				}
 				else {
 					if (verbose)
@@ -141,22 +138,16 @@ namespace ParamTuner {
 				
 			}
 			
-			
 		} catch (const rapidxml::parse_error &e) {
 			cerr << "Error while parsing XML file : " << e.what() << endl;
 		}
 		
-		
-		
 	}
 
-	void fileModificationCallback() {
+	void fileModificationCallback() 
+    {
 		loadFile(true);
 	}
-
-
-
-
 
 
 	// Public function
@@ -179,6 +170,5 @@ namespace ParamTuner {
 		binding[name] = ptr;
 		loadFile(false);
 	}
-
 
 }

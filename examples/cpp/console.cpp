@@ -19,7 +19,7 @@
 
 #include <iostream>
 #include <string>
-#include "libparamtuner.h"
+#include "paramtuner.h"
 
 #ifdef _WIN32
 #   include <windows.h>
