@@ -4,5 +4,4 @@
 
 # Executables
 *.exe
-console_linux
-console_windows
+console

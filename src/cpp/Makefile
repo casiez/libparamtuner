@@ -18,7 +18,7 @@
 CXX = g++
 AR = ar cqs
 
-TARGET_LIB = libParamTuner.a
+TARGET_LIB = libparamtuner.a
 
 CPPFLAGS = -std=c++11 -Wall -Wextra -Wno-unused-parameter
 
@@ -39,8 +39,7 @@ doc:
 	$(CXX) -c $(CPPFLAGS) $(LDINCS) -o $@ $<
 
 
-
-$(TARGET_LIB):
+$(TARGET_LIB): libparamtuner.o
 	$(AR) $@ $^
 
 clean:
@@ -48,4 +47,3 @@ clean:
 
 .PHONY: clean all doc
 
-libParamTuner.a: libparamtuner.o

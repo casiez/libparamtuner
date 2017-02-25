@@ -49,7 +49,7 @@ that are already installed in their respective OS :
 ### Compilation
 
 * In directory `src/cpp`, run `make`
-* Library file : `libParamTuner.a`
+* Library file : `libparamtuner.a`
 * Header file : `libparamtuner.h`
 
 ### Usage and documentation

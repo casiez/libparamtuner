@@ -22,6 +22,7 @@
 #include "rapidxml-1.13/rapidxml.hpp"
 
 #include <map>
+#include <vector>
 #include <algorithm>
 #include <iostream>
 #include <fstream>

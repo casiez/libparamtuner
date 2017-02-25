@@ -19,8 +19,15 @@
 
 #include <iostream>
 #include <string>
-#include <windows.h>
 #include "libparamtuner.h"
+
+#ifdef _WIN32
+#   include <windows.h>
+#   define SLEEP(ms) (Sleep(ms))
+#else 
+#   include <unistd.h> 
+#   define SLEEP(ms) (usleep(ms * 1000))
+#endif 
 
 using namespace std;
 
@@ -37,7 +44,7 @@ int main() {
 	ParamTuner::bind("mystring", &varString);
 
 	while (true) {
-		Sleep(500); // 500 ms
+		SLEEP(500); // 500 ms
 		cout << "setting1 (double) = " << varDouble
 			<< " ; setting2 (int) = " << varInt
 			<< " ; mybool (bool) = " << varBool
