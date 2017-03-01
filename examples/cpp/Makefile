@@ -26,6 +26,10 @@ ifeq ($(OS),Windows_NT)
     CPPFLAGS += -DUNICODE
 endif
 
+ifeq ($(shell uname),Darwin)
+	CPPFLAGS += -framework CoreServices
+endif
+
 LDINCS = -I../../src/cpp
 
 all: $(TARGETS)
