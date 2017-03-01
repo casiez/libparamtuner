@@ -33,8 +33,8 @@ import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
 
 import javax.swing.BoxLayout;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.awt.Dimension;
 
 import javax.swing.JScrollPane;
@@ -58,44 +58,19 @@ public class MainFrame extends JFrame {
 	
 	
 	/**
-	 * Main test
-	 */
-	public static void main(String[] args) throws Exception {
-		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		
-		EventQueue.invokeLater(() -> {
-			MainFrame frame = new MainFrame();
-			frame.setVisible(true);
-		});
-	}
-	
-	/**
 	 * Create the frame.
 	 */
 	public MainFrame() {
 		setTitle("ParamTuner GUI");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		addWindowListener(new WindowListener() {
-			@Override
-			public void windowOpened(WindowEvent e) { }
-			@Override
-			public void windowIconified(WindowEvent e) { }
-			@Override
-			public void windowDeiconified(WindowEvent e) { }
-			
-			@Override
-			public void windowDeactivated(WindowEvent e) { }
-			
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// TODO demander confirmation
+				if (confirmSaveBeforeClosingFile()) {
+					dispose();
+					System.exit(0);
+				}
 			}
-			
-			@Override
-			public void windowClosed(WindowEvent e) { }
-			
-			@Override
-			public void windowActivated(WindowEvent e) { }
 		});
 		setSize(500, 600);
 
@@ -163,6 +138,22 @@ public class MainFrame extends JFrame {
 		setSaved(true);
 		
 	}
+	
+	/**
+	 * Ask to the user if he want to save or not save the file before closing it.
+	 * If the user want to save the file, it is saved inside this method.
+	 * @return true if the user want to close the file (with or without saving) or if the file is already saved, false if the user click cancel.
+	 */
+	private boolean confirmSaveBeforeClosingFile() {
+		if (saved)
+			return true;
+		int ret = JOptionPane.showOptionDialog(this, "Do you want to save the current file ?", "Save current file", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.YES_OPTION);
+		if (ret == JOptionPane.CANCEL_OPTION)
+			return false;
+		if (ret == JOptionPane.YES_OPTION)
+			saveFile();
+		return true;
+	}
 
 	public void loadFile(String path) {
 		
@@ -171,13 +162,8 @@ public class MainFrame extends JFrame {
 			return;
 		}
 
-		if (!saved) {
-			int ret = JOptionPane.showOptionDialog(this, "Do you want to save the current file ?", "Save current file", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.YES_OPTION);
-			if (ret == JOptionPane.CANCEL_OPTION)
-				return;
-			if (ret == JOptionPane.YES_OPTION)
-				saveFile();
-		}
+		if (!confirmSaveBeforeClosingFile())
+			return;
 		
 		clearConfigEntries();
 		
