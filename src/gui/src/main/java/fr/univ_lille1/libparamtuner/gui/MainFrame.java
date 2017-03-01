@@ -49,12 +49,13 @@ public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPanel;
 	private JTextField textField;
+	public final JScrollPane contentScroll;
+	private JButton btnSave;
 	
 	
 	private ParameterFile loadedFile = null;
 	private boolean saved = true;
 	private boolean autosave = false;
-	private JButton btnSave;
 	
 	
 	/**
@@ -108,12 +109,25 @@ public class MainFrame extends JFrame {
 		chckbxAutosave.addActionListener(e -> setAutosave(chckbxAutosave.isSelected()));
 		topPanel.add(chckbxAutosave);
 		
-		JScrollPane contentScroll = new JScrollPane();
+		contentScroll = new JScrollPane();
 		contentScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		contentScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		globalPanel.add(contentScroll, BorderLayout.CENTER);
 		
-		contentPanel = new JPanel();
+		contentPanel = new JPanel() {
+			private static final long serialVersionUID = 1L;
+			
+			@Override
+			public Dimension getPreferredSize() {
+				return new Dimension(contentScroll.getViewport().getSize().width, super.getPreferredSize().height);
+			}
+			
+			@Override
+			public Dimension getMaximumSize() {
+				return new Dimension(contentScroll.getViewport().getSize().width, super.getMaximumSize().height);
+			}
+			
+		};
 		contentPanel.setBorder(new EmptyBorder(3, 3, 3, 3));
 		contentScroll.setViewportView(contentPanel);
 		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));

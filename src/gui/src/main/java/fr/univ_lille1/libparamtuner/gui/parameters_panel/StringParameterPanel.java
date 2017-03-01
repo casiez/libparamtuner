@@ -17,6 +17,8 @@
  */
 package fr.univ_lille1.libparamtuner.gui.parameters_panel;
 
+import java.awt.Dimension;
+
 import javax.swing.JEditorPane;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -31,7 +33,22 @@ public class StringParameterPanel extends ParameterPanel {
 		super(f, index, p);
 		
 
-		JEditorPane editorPane = new JEditorPane("text/plain", p.getValue());
+		JEditorPane editorPane = new JEditorPane("text/plain", p.getValue()) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public Dimension getPreferredSize() {
+				Dimension pSize = super.getPreferredSize();
+				System.out.println("p "+pSize);
+				System.out.println("m "+getMinimumSize());
+				return pSize;
+			}
+			
+			@Override
+			public Dimension getMinimumSize() {
+				return new Dimension(10, 10);
+			}
+		};
 		editorPane.getDocument().addDocumentListener(new DocumentListener() {
 			@Override
 			public void removeUpdate(DocumentEvent e) {

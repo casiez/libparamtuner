@@ -36,9 +36,6 @@ public class BooleanParameterPanel extends ParameterPanel {
 		box.setBackground(getBackground());
 		box.setContentAreaFilled(true);
 		add(box);
-		
-		
-		// TODO this pannel must take full width of the window
 	}
 	
 }

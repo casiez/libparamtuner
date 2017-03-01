@@ -18,6 +18,7 @@
 package fr.univ_lille1.libparamtuner.gui.parameters_panel;
 
 import java.awt.Color;
+import java.awt.Dimension;
 
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
@@ -54,8 +55,22 @@ public abstract class ParameterPanel extends JPanel {
 		frame.onContentModify();
 	}
 	
+	@Override
+	public Dimension getPreferredSize() {
+		return new Dimension(frame.contentScroll.getViewport().getSize().width, super.getPreferredSize().height);
+	}
 	
 	
+	@Override
+	public Dimension getMaximumSize() {
+		return new Dimension(frame.contentScroll.getViewport().getSize().width, super.getMaximumSize().height);
+	}
+	
+	
+	@Override
+	public Dimension getMinimumSize() {
+		return new Dimension(frame.contentScroll.getViewport().getSize().width, super.getMinimumSize().height);
+	}
 	
 	
 	
