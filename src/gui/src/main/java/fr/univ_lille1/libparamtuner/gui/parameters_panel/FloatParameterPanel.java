@@ -17,6 +17,8 @@
  */
 package fr.univ_lille1.libparamtuner.gui.parameters_panel;
 
+import java.awt.EventQueue;
+
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -28,9 +30,17 @@ import fr.univ_lille1.libparamtuner.parameters.FloatParameter;
 public class FloatParameterPanel extends ParameterPanel {
 	private static final long serialVersionUID = 1L;
 	
-	private static final int SLIDER_PRECISION = 1000; // TODO fix precision issue
-	
 	private JSlider slider = null;
+	
+	/*
+	 * Theses private properties are use to avoid pseudo-infinite loop between
+	 * update events of the spinner and the slider.
+	 * This is because when one component is updated by the user, the other component is updated to.
+	 * If the value is converted between this two components, their listeners may be called multiple times.
+	 * 
+	 * We also ensure that notifyContentModification() is only called once per user interaction.
+	 */
+	private boolean isSpinnerChanging = false, isSliderChanging = false;
 
 	public FloatParameterPanel(MainFrame f, int index, FloatParameter p) {
 		super(f, index, p);
@@ -46,22 +56,55 @@ public class FloatParameterPanel extends ParameterPanel {
 				minMaxValid ? p.getMin() : -Double.MAX_VALUE,
 				minMaxValid ? p.getMax() : Double.MAX_VALUE, 1));
 		spinner.addChangeListener(e -> {
-			if (slider != null)
-				slider.setValue(realValueToSliderValue((double)spinner.getValue(), p));
-			p.setValue((double)spinner.getValue());
-			notifyContentModification();
+			if (isSpinnerChanging)
+				return;
+			try {
+				isSpinnerChanging = true;
+				
+				if (!isSliderChanging) {
+					p.setValue((double)spinner.getValue());
+					notifyContentModification();
+					if (slider != null)
+						slider.setValue(realValueToSliderValue((double)spinner.getValue(), p));
+				}
+			} finally {
+				EventQueue.invokeLater(() -> {
+					isSpinnerChanging = false;
+				});
+			}
 		});
 		
 		
 		
 		if (minMaxValid) {
-			slider = new JSlider(SwingConstants.HORIZONTAL, 0, SLIDER_PRECISION, realValueToSliderValue(value, p));
-			// s need to be final to be used in following listener :
+			/*
+			 * JSlider doesn't support double or float values, so we have to convert integer values to the real value
+			 * and vice-versa (via realValueToSliderValue() and sliderValueToRealValue()).
+			 * JSlider need to have a specific range to avoid unwanted value updates between 
+			 */
+			double sliderPrecision = p.getMax() - p.getMin();
+			while (sliderPrecision < 1000) {
+				sliderPrecision *= 2;
+			}
+			int intSliderPrecision = (sliderPrecision > Integer.MAX_VALUE) ? Integer.MAX_VALUE : (int) sliderPrecision;
+			
+			slider = new JSlider(SwingConstants.HORIZONTAL, 0, intSliderPrecision, 0);
+			slider.setValue(realValueToSliderValue(value, p));
 			slider.addChangeListener(e -> {
-				double realValue = sliderValueToRealValue(slider.getValue(), p);
-				spinner.setValue(realValue);
-				p.setValue(realValue);
-				notifyContentModification();
+				if (isSliderChanging)
+					return;
+				try {
+					isSliderChanging = true;
+					
+					double realValue = sliderValueToRealValue(slider.getValue(), p);
+					if (!isSpinnerChanging) {
+						p.setValue(realValue);
+						notifyContentModification();
+						spinner.setValue(realValue);
+					}
+				} finally {
+					isSliderChanging = false;
+				}
 			});
 			add(slider);
 		}
@@ -72,12 +115,14 @@ public class FloatParameterPanel extends ParameterPanel {
 	}
 	
 	
-	private static double sliderValueToRealValue(int sldrValue, FloatParameter p) {
-		return sldrValue * (p.getMax() - p.getMin()) / SLIDER_PRECISION + p.getMin();
+	private double sliderValueToRealValue(int sldrValue, FloatParameter p) {
+		if (slider == null) return 0;
+		return sldrValue * (p.getMax() - p.getMin()) / slider.getMaximum() + p.getMin();
 	}
 	
-	private static int realValueToSliderValue(double realValue, FloatParameter p) {
-		return (int)((realValue - p.getMin()) * SLIDER_PRECISION / (p.getMax() - p.getMin()));
+	private int realValueToSliderValue(double realValue, FloatParameter p) {
+		if (slider == null) return 0;
+		return (int)((realValue - p.getMin()) * slider.getMaximum() / (p.getMax() - p.getMin()));
 	}
 	
 }

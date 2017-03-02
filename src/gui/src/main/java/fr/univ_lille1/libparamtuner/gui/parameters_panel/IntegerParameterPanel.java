@@ -17,6 +17,8 @@
  */
 package fr.univ_lille1.libparamtuner.gui.parameters_panel;
 
+import java.awt.EventQueue;
+
 import javax.swing.JSlider;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
@@ -29,6 +31,16 @@ public class IntegerParameterPanel extends ParameterPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private JSlider slider = null;
+	
+	/*
+	 * Theses private properties are use to avoid pseudo-infinite loop between
+	 * update events of the spinner and the slider.
+	 * This is because when one component is updated by the user, the other component is updated automatically.
+	 * If the value is converted between this two components, their listeners may be called multiple times.
+	 * 
+	 * We also ensure that notifyContentModification() is only called once per user interaction.
+	 */
+	private boolean isSpinnerChanging = false, isSliderChanging = false;
 
 	public IntegerParameterPanel(MainFrame f, int index, IntegerParameter p) {
 		super(f, index, p);
@@ -44,23 +56,43 @@ public class IntegerParameterPanel extends ParameterPanel {
 				minMaxValid ? (long)p.getMin() : Long.MIN_VALUE,
 				minMaxValid ? (long)p.getMax() : Long.MAX_VALUE, 1));
 		spinner.addChangeListener(e -> {
-			if (slider != null) {
-				slider.setValue(((Double)spinner.getValue()).intValue());
+			if (isSpinnerChanging)
+				return;
+			try {
+				isSpinnerChanging = true;
+				
+				if (!isSliderChanging) {
+					p.setValue(((Double)spinner.getValue()).intValue());
+					notifyContentModification();
+					if (slider != null)
+						slider.setValue(((Double)spinner.getValue()).intValue());
+				}
+			} finally {
+				EventQueue.invokeLater(() -> {
+					isSpinnerChanging = false;
+				});
 			}
-			p.setValue(((Double)spinner.getValue()).intValue());
-			notifyContentModification();
 		});
 		
 		
 		
 		if (minMaxValid) {
 			slider = new JSlider(SwingConstants.HORIZONTAL, (int)p.getMin(), (int)p.getMax(), (int)value);
-			
 			slider.addChangeListener(e -> {
-				int realValue = slider.getValue();
-				spinner.setValue((double)realValue);
-				p.setValue(realValue);
-				notifyContentModification();
+				if (isSliderChanging)
+					return;
+				try {
+					isSliderChanging = true;
+					
+					int newValue = slider.getValue();
+					if (!isSpinnerChanging) {
+						p.setValue(newValue);
+						notifyContentModification();
+						spinner.setValue((double)newValue);
+					}
+				} finally {
+					isSliderChanging = false;
+				}
 			});
 			add(slider);
 		}
