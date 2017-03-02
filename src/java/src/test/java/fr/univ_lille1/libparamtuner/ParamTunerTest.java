@@ -24,8 +24,6 @@ import java.nio.file.StandardCopyOption;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.univ_lille1.libparamtuner.ParamTuner;
-
 public class ParamTunerTest {
 	
 	
@@ -72,12 +70,13 @@ public class ParamTunerTest {
 		// thread that simulate external software which modify the file settings.xml
 		Thread t = new Thread(() -> {
 			try {
-				for(int i = 0; ; i++) {
+				for (int i = 0;; i++) {
 					Thread.sleep(1000);
-					if (i%2 == 0)
+					if (i % 2 == 0)
 						Files.copy(Paths.get(newPath), Paths.get(watchedPath), StandardCopyOption.REPLACE_EXISTING);
 					else
-						Files.copy(Paths.get(originalPath), Paths.get(watchedPath), StandardCopyOption.REPLACE_EXISTING);
+						Files.copy(Paths.get(originalPath), Paths.get(watchedPath),
+								StandardCopyOption.REPLACE_EXISTING);
 				}
 			} catch (InterruptedException e) {
 				return;
@@ -89,12 +88,12 @@ public class ParamTunerTest {
 		
 		
 		// main loop
-		for(int i = 0; i < 25; i++) {
+		for (int i = 0; i < 25; i++) {
 			Thread.sleep(200);
-			System.out.println("setting1 (double) = "+setting1
-					+" ; setting2 (int) = "+setting2
-					+" ; mybool (bool) = "+mybool
-					+" ; mystring (string) = "+mystring);
+			System.out.println("setting1 (double) = " + setting1
+					+ " ; setting2 (int) = " + setting2
+					+ " ; mybool (bool) = " + mybool
+					+ " ; mystring (string) = " + mystring);
 		}
 		
 		t.interrupt();

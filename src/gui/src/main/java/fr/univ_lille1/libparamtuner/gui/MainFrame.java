@@ -18,11 +18,21 @@
 package fr.univ_lille1.libparamtuner.gui;
 
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
+import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EmptyBorder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -30,20 +40,6 @@ import javax.xml.transform.TransformerException;
 import fr.univ_lille1.libparamtuner.gui.parameters_panel.ParameterPanel;
 import fr.univ_lille1.libparamtuner.parameters.Parameter;
 import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
-
-import javax.swing.BoxLayout;
-import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.Dimension;
-
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 
 public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
@@ -74,10 +70,10 @@ public class MainFrame extends JFrame {
 			}
 		});
 		setSize(500, 600);
-
+		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation((int)(screenSize.getWidth()/2 - getSize().getWidth()/2),
-				(int)(screenSize.getHeight()/2 - getSize().getHeight()/2));
+		setLocation((int) (screenSize.getWidth() / 2 - getSize().getWidth() / 2),
+				(int) (screenSize.getHeight() / 2 - getSize().getHeight() / 2));
 		
 		JPanel globalPanel = new JPanel();
 		globalPanel.setBorder(new EmptyBorder(3, 3, 3, 3));
@@ -99,7 +95,7 @@ public class MainFrame extends JFrame {
 		JButton btnCharger = new JButton("Load");
 		topPanel.add(btnCharger);
 		btnCharger.addActionListener(e -> loadFile(textField.getText()));
-
+		
 		btnSave = new JButton("Save");
 		btnSave.addActionListener(e -> saveFile());
 		btnSave.setEnabled(false);
@@ -161,21 +157,22 @@ public class MainFrame extends JFrame {
 	private boolean confirmSaveBeforeClosingFile() {
 		if (saved)
 			return true;
-		int ret = JOptionPane.showOptionDialog(this, "Do you want to save the current file ?", "Save current file", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.YES_OPTION);
+		int ret = JOptionPane.showOptionDialog(this, "Do you want to save the current file ?", "Save current file",
+				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.YES_OPTION);
 		if (ret == JOptionPane.CANCEL_OPTION)
 			return false;
 		if (ret == JOptionPane.YES_OPTION)
 			saveFile();
 		return true;
 	}
-
+	
 	public void loadFile(String path) {
 		
 		if (path.trim().isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Please specify a file path", "Error", JOptionPane.ERROR_MESSAGE);
 			return;
 		}
-
+		
 		if (!confirmSaveBeforeClosingFile())
 			return;
 		

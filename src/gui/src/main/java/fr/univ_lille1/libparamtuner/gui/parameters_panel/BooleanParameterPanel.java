@@ -24,7 +24,7 @@ import fr.univ_lille1.libparamtuner.parameters.BooleanParameter;
 
 public class BooleanParameterPanel extends ParameterPanel {
 	private static final long serialVersionUID = 1L;
-
+	
 	public BooleanParameterPanel(MainFrame f, int index, BooleanParameter p) {
 		super(f, index, p);
 		

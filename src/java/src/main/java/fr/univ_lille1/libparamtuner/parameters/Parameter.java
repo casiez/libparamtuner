@@ -26,12 +26,13 @@ public abstract class Parameter {
 	protected String value;
 	protected double min;
 	protected double max;
-
+	
 	protected Parameter(String n, String v, double m, double M) {
 		name = n;
 		value = v;
 		setMinMax(m, M);
 	}
+	
 	protected Parameter(String n, String v) {
 		this(n, v, 0, 0);
 	}
@@ -81,12 +82,12 @@ public abstract class Parameter {
 		
 		try {
 			m = Double.parseDouble(xmlEl.getAttribute("min"));
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			m = 0;
 		}
 		try {
 			M = Double.parseDouble(xmlEl.getAttribute("max"));
-		} catch(NumberFormatException e) {
+		} catch (NumberFormatException e) {
 			M = 0;
 		}
 		setMinMax(m, M);
@@ -112,7 +113,7 @@ public abstract class Parameter {
 		Type type = Type.getType(typeAttrValue);
 		
 		if (type == null)
-			throw new IllegalArgumentException("Element has not a valid type attribute : '"+type+"'");
+			throw new IllegalArgumentException("Element has not a valid type attribute : '" + type + "'");
 		
 		return type.parameterClass.getDeclaredConstructor(Element.class).newInstance(el);
 		

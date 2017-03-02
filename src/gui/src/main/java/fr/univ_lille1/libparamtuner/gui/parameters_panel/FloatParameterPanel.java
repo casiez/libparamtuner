@@ -41,17 +41,15 @@ public class FloatParameterPanel extends ParameterPanel {
 	 * We also ensure that notifyContentModification() is only called once per user interaction.
 	 */
 	private boolean isSpinnerChanging = false, isSliderChanging = false;
-
+	
 	public FloatParameterPanel(MainFrame f, int index, FloatParameter p) {
 		super(f, index, p);
 		
 		boolean minMaxValid = p.getMax() != p.getMin();
 		
-		double value = !minMaxValid ? p.getValue() :
-			(p.getValue() < p.getMin()) ? p.getMin() :
-				(p.getValue() > p.getMax()) ? p.getMax() :
-					p.getValue();
-
+		double value = !minMaxValid ? p.getValue()
+				: (p.getValue() < p.getMin()) ? p.getMin() : (p.getValue() > p.getMax()) ? p.getMax() : p.getValue();
+		
 		JSpinner spinner = new JSpinner(new SpinnerNumberModel(value,
 				minMaxValid ? p.getMin() : -Double.MAX_VALUE,
 				minMaxValid ? p.getMax() : Double.MAX_VALUE, 1));
@@ -62,10 +60,10 @@ public class FloatParameterPanel extends ParameterPanel {
 				isSpinnerChanging = true;
 				
 				if (!isSliderChanging) {
-					p.setValue((double)spinner.getValue());
+					p.setValue((double) spinner.getValue());
 					notifyContentModification();
 					if (slider != null)
-						slider.setValue(realValueToSliderValue((double)spinner.getValue(), p));
+						slider.setValue(realValueToSliderValue((double) spinner.getValue(), p));
 				}
 			} finally {
 				EventQueue.invokeLater(() -> {
@@ -118,13 +116,15 @@ public class FloatParameterPanel extends ParameterPanel {
 	
 	
 	private double sliderValueToRealValue(int sldrValue, FloatParameter p) {
-		if (slider == null) return 0;
+		if (slider == null)
+			return 0;
 		return sldrValue * (p.getMax() - p.getMin()) / slider.getMaximum() + p.getMin();
 	}
 	
 	private int realValueToSliderValue(double realValue, FloatParameter p) {
-		if (slider == null) return 0;
-		return (int)((realValue - p.getMin()) * slider.getMaximum() / (p.getMax() - p.getMin()));
+		if (slider == null)
+			return 0;
+		return (int) ((realValue - p.getMin()) * slider.getMaximum() / (p.getMax() - p.getMin()));
 	}
 	
 }

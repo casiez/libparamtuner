@@ -130,7 +130,7 @@ public class ParamTuner {
 	private static FileWatcher fileWatcherInstance;
 	
 	private static Map<String, Bind<?>> binding = Collections.synchronizedMap(new HashMap<>());
-
+	
 	private static class Bind<T> {
 		public final Class<T> javaType;
 		public final Consumer<T> setter;
@@ -161,11 +161,12 @@ public class ParamTuner {
 						Type t = Type.getTypeFromJavaType(bind.javaType);
 						if (t.parameterClass.isInstance(param)) {
 							bind.setter.accept(Type.getFunctionGetterFromJavaType(bind.javaType, t.parameterClass)
-											.apply(t.parameterClass.cast(param)));
+									.apply(t.parameterClass.cast(param)));
 						}
 						else {
-							printError("Setting '" + param.name + "' has type '"+param.getType().name().toLowerCase()+"' in XML file"
-									+ " but is binded to Java type "+bind.javaType.getSimpleName()+".");
+							printError("Setting '" + param.name + "' has type '" + param.getType().name().toLowerCase()
+									+ "' in XML file but is binded to Java type " + bind.javaType.getSimpleName()
+									+ ".");
 						}
 					}
 					else {
@@ -179,8 +180,7 @@ public class ParamTuner {
 			}
 		} catch (FileNotFoundException e) {
 			printError(e.getMessage());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			printError("Error while parsing XML file:");
 			e.printStackTrace();
 		}
@@ -206,7 +206,7 @@ public class ParamTuner {
 		load(new File(configFile));
 	}
 	
-
+	
 	/**
 	 * Start listening modifications of the specified file. <br>
 	<br>
@@ -268,10 +268,12 @@ public class ParamTuner {
 	*/
 	public static <T> void bind(String parameterName, Class<T> javaType, Consumer<T> setter) {
 		if (javaType.isPrimitive()) {
-			throw new IllegalArgumentException("Please specify wrapper Class object instead of primitive Class object, on parameter 'javaType'");
+			throw new IllegalArgumentException(
+					"Please specify wrapper Class object instead of primitive Class object, on parameter 'javaType'");
 		}
 		if (Type.getTypeFromJavaType(javaType) == null) {
-			throw new IllegalArgumentException("Java type "+javaType.getSimpleName()+" is not supported for binding.");
+			throw new IllegalArgumentException(
+					"Java type " + javaType.getSimpleName() + " is not supported for binding.");
 		}
 		binding.put(parameterName, new Bind<>(javaType, setter));
 	}

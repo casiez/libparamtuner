@@ -29,7 +29,7 @@ public enum Type {
 	BOOLEAN(BooleanParameter.class, "bool", "boolean"),
 	STRING(StringParameter.class, "string");
 	
-
+	
 	/*
 	 * Static values
 	 */
@@ -38,13 +38,13 @@ public enum Type {
 	
 	static {
 		javaTypeToType.put(Integer.class, INTEGER);
-		javaTypeToGetter.put(Integer.class, (IntegerParameter p) -> (int)p.getValue());
+		javaTypeToGetter.put(Integer.class, (IntegerParameter p) -> (int) p.getValue());
 		
 		javaTypeToType.put(Long.class, INTEGER);
 		javaTypeToGetter.put(Long.class, (IntegerParameter p) -> p.getValue());
 		
 		javaTypeToType.put(Float.class, FLOAT);
-		javaTypeToGetter.put(Float.class, (FloatParameter p) -> (float)p.getValue());
+		javaTypeToGetter.put(Float.class, (FloatParameter p) -> (float) p.getValue());
 		
 		javaTypeToType.put(Double.class, FLOAT);
 		javaTypeToGetter.put(Double.class, (FloatParameter p) -> p.getValue());
@@ -58,7 +58,7 @@ public enum Type {
 	}
 	
 	
-
+	
 	/*
 	 * Static methods
 	 */
@@ -86,14 +86,10 @@ public enum Type {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T, P extends Parameter> Function<P, T> getFunctionGetterFromJavaType(Class<T> c, @SuppressWarnings("unused") Class<P> pC) {
+	public static <T, P extends Parameter> Function<P, T> getFunctionGetterFromJavaType(Class<T> c,
+			@SuppressWarnings("unused") Class<P> pC) {
 		return (Function<P, T>) javaTypeToGetter.get(c);
 	}
-	
-	
-	
-	
-	
 	
 	
 	

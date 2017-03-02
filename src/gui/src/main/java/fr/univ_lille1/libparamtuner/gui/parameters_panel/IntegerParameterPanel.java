@@ -41,20 +41,19 @@ public class IntegerParameterPanel extends ParameterPanel {
 	 * We also ensure that notifyContentModification() is only called once per user interaction.
 	 */
 	private boolean isSpinnerChanging = false, isSliderChanging = false;
-
+	
 	public IntegerParameterPanel(MainFrame f, int index, IntegerParameter p) {
 		super(f, index, p);
 		
 		boolean minMaxValid = p.getMax() != p.getMin();
 		
-		long value = !minMaxValid ? p.getValue() :
-			(p.getValue() < p.getMin()) ? ((long)p.getMin()) :
-				(p.getValue() > p.getMax()) ? ((long)p.getMax()) :
-					p.getValue();
+		long value = !minMaxValid ? p.getValue()
+				: (p.getValue() < p.getMin()) ? ((long) p.getMin())
+						: (p.getValue() > p.getMax()) ? ((long) p.getMax()) : p.getValue();
 		
 		JSpinner spinner = new JSpinner(new SpinnerNumberModel(value,
-				minMaxValid ? (long)p.getMin() : Long.MIN_VALUE,
-				minMaxValid ? (long)p.getMax() : Long.MAX_VALUE, 1));
+				minMaxValid ? (long) p.getMin() : Long.MIN_VALUE,
+				minMaxValid ? (long) p.getMax() : Long.MAX_VALUE, 1));
 		spinner.addChangeListener(e -> {
 			if (isSpinnerChanging)
 				return;
@@ -62,10 +61,10 @@ public class IntegerParameterPanel extends ParameterPanel {
 				isSpinnerChanging = true;
 				
 				if (!isSliderChanging) {
-					p.setValue(((Double)spinner.getValue()).intValue());
+					p.setValue(((Double) spinner.getValue()).intValue());
 					notifyContentModification();
 					if (slider != null)
-						slider.setValue(((Double)spinner.getValue()).intValue());
+						slider.setValue(((Double) spinner.getValue()).intValue());
 				}
 			} finally {
 				EventQueue.invokeLater(() -> {
@@ -77,7 +76,7 @@ public class IntegerParameterPanel extends ParameterPanel {
 		
 		
 		if (minMaxValid) {
-			slider = new JSlider(SwingConstants.HORIZONTAL, (int)p.getMin(), (int)p.getMax(), (int)value);
+			slider = new JSlider(SwingConstants.HORIZONTAL, (int) p.getMin(), (int) p.getMax(), (int) value);
 			slider.setPaintTicks(false);
 			slider.setPaintLabels(false);
 			slider.addChangeListener(e -> {
@@ -90,7 +89,7 @@ public class IntegerParameterPanel extends ParameterPanel {
 					if (!isSpinnerChanging) {
 						p.setValue(newValue);
 						notifyContentModification();
-						spinner.setValue((double)newValue);
+						spinner.setValue((double) newValue);
 					}
 				} finally {
 					isSliderChanging = false;

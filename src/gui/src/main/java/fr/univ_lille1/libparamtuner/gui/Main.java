@@ -25,14 +25,14 @@ import javax.swing.UIManager;
 public class Main {
 	
 	public static void main(String[] args) {
-
+		
 		boolean headless = GraphicsEnvironment.isHeadless();
 		
 		if (headless) {
 			System.err.println("Headless mode not supported (need graphical environment).");
 			System.exit(1);
 		}
-
+		
 		try {
 			// GUI will have the OS theme or desktop environment's theme
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

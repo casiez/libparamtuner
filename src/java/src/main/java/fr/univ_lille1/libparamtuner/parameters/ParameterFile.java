@@ -45,7 +45,7 @@ public class ParameterFile {
 	
 	public final File file;
 	
-
+	
 	public ParameterFile(String fileName, boolean loadFromFile) throws Exception {
 		this(new File(fileName), loadFromFile);
 	}
@@ -74,7 +74,7 @@ public class ParameterFile {
 				 */
 				try {
 					doc = builder.parse(file);
-				} catch(IOException e) {
+				} catch (IOException e) {
 					/* In case of the file will not readable anymore (deleted ? )
 					 * we count and stop if we've done to many trials
 					 */
@@ -83,7 +83,7 @@ public class ParameterFile {
 						throw e;
 					Thread.sleep(50); // Wait before retry
 				}
-			} while(doc == null);
+			} while (doc == null);
 			readDocument(doc);
 		}
 	}

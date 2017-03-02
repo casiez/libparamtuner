@@ -28,21 +28,13 @@ import fr.univ_lille1.libparamtuner.parameters.StringParameter;
 
 public class StringParameterPanel extends ParameterPanel {
 	private static final long serialVersionUID = 1L;
-
+	
 	public StringParameterPanel(MainFrame f, int index, StringParameter p) {
 		super(f, index, p);
 		
-
+		
 		JEditorPane editorPane = new JEditorPane("text/plain", p.getValue()) {
 			private static final long serialVersionUID = 1L;
-
-			@Override
-			public Dimension getPreferredSize() {
-				Dimension pSize = super.getPreferredSize();
-				System.out.println("p "+pSize);
-				System.out.println("m "+getMinimumSize());
-				return pSize;
-			}
 			
 			@Override
 			public Dimension getMinimumSize() {
@@ -55,11 +47,13 @@ public class StringParameterPanel extends ParameterPanel {
 				p.setValue(editorPane.getText());
 				notifyContentModification();
 			}
+			
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				p.setValue(editorPane.getText());
 				notifyContentModification();
 			}
+			
 			@Override
 			public void changedUpdate(DocumentEvent e) {
 				p.setValue(editorPane.getText());

@@ -48,7 +48,7 @@ public abstract class ParameterPanel extends JPanel {
 		
 		add(new JLabel(p.name));
 		
-		setToolTipText(p.name+" of type "+p.getType().name());
+		setToolTipText(p.name + " of type " + p.getType().name());
 	}
 	
 	
@@ -77,19 +77,19 @@ public abstract class ParameterPanel extends JPanel {
 	
 	public static ParameterPanel fromParameter(MainFrame f, int index, Parameter p) {
 		if (p instanceof BooleanParameter) {
-			return new BooleanParameterPanel(f, index, (BooleanParameter)p);
+			return new BooleanParameterPanel(f, index, (BooleanParameter) p);
 		}
 		if (p instanceof FloatParameter) {
-			return new FloatParameterPanel(f, index, (FloatParameter)p);
+			return new FloatParameterPanel(f, index, (FloatParameter) p);
 		}
 		if (p instanceof IntegerParameter) {
-			return new IntegerParameterPanel(f, index, (IntegerParameter)p);
+			return new IntegerParameterPanel(f, index, (IntegerParameter) p);
 		}
 		if (p instanceof StringParameter) {
-			return new StringParameterPanel(f, index, (StringParameter)p);
+			return new StringParameterPanel(f, index, (StringParameter) p);
 		}
 		
-		throw new IllegalArgumentException("Unsupported Parameter type : "+p.getClass().getName());
+		throw new IllegalArgumentException("Unsupported Parameter type : " + p.getClass().getName());
 	}
 	
 	
