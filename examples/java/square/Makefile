@@ -15,39 +15,21 @@
 #  You should have received a copy of the GNU General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-CXX = g++
 
-TARGETS = console \
+all: exec 
 
-
-CPPFLAGS = -std=c++11 -Wall -Wextra -Wno-unused-parameter
-
-ifeq ($(OS),Windows_NT)
-    CPPFLAGS += -DUNICODE
-endif
-
-ifeq ($(shell uname),Darwin)
-	CPPFLAGS += -framework CoreServices
-endif
-
-LDINCS = -I../../src/cpp
-
-all: $(TARGETS)
-
-%.o: %.cpp
-	$(CXX) -c $(CPPFLAGS) $(LDINCS) -o $@ $<
-
+%.class: %.java
+	javac -cp libParamTuner.jar $<
 
 clean:
-	rm -f $(TARGETS) *.o *.exe *.a
+	rm -f $(TARGETS) *.class *.jar
 
 
-.PHONY: clean all
+.PHONY: clean all exec
 
-libparamtuner.a:
-	cd ../../src/cpp && make libparamtuner.a && cp libparamtuner.a ../../examples/cpp/
+libParamTuner.jar:
+	cd ../../../src/java && mvn install && cp target/libParamTuner.jar ../../examples/java/square
 
-# targets
-console: libparamtuner.a console.o
-	$(CXX) $(CPPFLAGS) -o $@ console.o -L. -lparamtuner -lpthread
-
+	
+exec: libParamTuner.jar Square.class
+	@java -cp libParamTuner.jar:. Square

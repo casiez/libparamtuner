@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ParamList>
+<height max="600.0" min="1.0" type="int" value="200"/>
+<message type="string" value="Hello world"/>
+<width max="400.0" min="1.0" type="int" value="400"/>
+<x max="600.0" min="0.0" type="int" value="10"/>
+<y max="400.0" min="0.0" type="int" value="10"/>
+</ParamList>
