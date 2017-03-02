@@ -81,7 +81,7 @@ To use it in a Maven project, add theses lines in your POM's
 `<dependencies>` section :
 ```
 <dependency>
-	<groupId>fr.univ_lille1.pji.libparamtuner</groupId>
+	<groupId>fr.univ_lille1.libparamtuner</groupId>
 	<artifactId>libParamTuner</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 <dependency>
@@ -120,5 +120,4 @@ then you can put the path to the XML directly into the GUI.
 
 * Add graphical examples (Java Swing ? )
 * Create unit test files for C++ and Java lib
-* Update the GUI (See TODO comments in source code)
 * Configure CI via Github if possible.
