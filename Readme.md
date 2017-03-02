@@ -118,6 +118,7 @@ then you can put the path to the XML directly into the GUI.
 
 ## TODO list :
 
-* Add graphical examples (Java Swing ? )
+* Add more graphical examples (C glut)
 * Create unit test files for C++ and Java lib
-* Configure CI via Github if possible.
+* Configure Travis CI for Github
+* JavaFX for GUI
