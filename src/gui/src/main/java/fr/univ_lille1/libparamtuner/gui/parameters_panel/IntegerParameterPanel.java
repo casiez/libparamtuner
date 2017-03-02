@@ -78,6 +78,8 @@ public class IntegerParameterPanel extends ParameterPanel {
 		
 		if (minMaxValid) {
 			slider = new JSlider(SwingConstants.HORIZONTAL, (int)p.getMin(), (int)p.getMax(), (int)value);
+			slider.setPaintTicks(false);
+			slider.setPaintLabels(false);
 			slider.addChangeListener(e -> {
 				if (isSliderChanging)
 					return;

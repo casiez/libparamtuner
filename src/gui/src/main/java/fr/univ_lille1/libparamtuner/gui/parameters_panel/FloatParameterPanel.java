@@ -90,6 +90,8 @@ public class FloatParameterPanel extends ParameterPanel {
 			
 			slider = new JSlider(SwingConstants.HORIZONTAL, 0, intSliderPrecision, 0);
 			slider.setValue(realValueToSliderValue(value, p));
+			slider.setPaintTicks(false);
+			slider.setPaintLabels(false);
 			slider.addChangeListener(e -> {
 				if (isSliderChanging)
 					return;

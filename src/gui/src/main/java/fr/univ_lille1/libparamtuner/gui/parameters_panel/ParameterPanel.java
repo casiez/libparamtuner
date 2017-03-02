@@ -48,6 +48,7 @@ public abstract class ParameterPanel extends JPanel {
 		
 		add(new JLabel(p.name));
 		
+		setToolTipText(p.name+" of type "+p.getType().name());
 	}
 	
 	
