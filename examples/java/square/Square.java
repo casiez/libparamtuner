@@ -1,6 +1,6 @@
 /*
  *  libParamTuner
- *  Copyright (C) 2017 Marc Baloup, Veïs Oudjail
+ *  Copyright (C) 2017 Marc Géry Casiez
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -15,64 +15,65 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 import fr.univ_lille1.libparamtuner.ParamTuner;
+import javafx.animation.AnimationTimer;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-public class Square {
+public class Carre extends Application {
+	GraphicsContext gc;
+	Canvas canvas;
+	int x = 30, y = 30;
+	String message = "Hello world";
 	
-	static int x = 10, y = 10; 
-	static int width = 200, height = 200;
-	static String message = "Hello world";
-	
-	public static void main(String[] args) throws InterruptedException {
-		
+    public void start(Stage stage) {
 		// Load settings file 
 		ParamTuner.load("settings.xml");
 
 		ParamTuner.bind("x", Integer.class, v -> x = v);
 		ParamTuner.bind("y", Integer.class, v -> y = v);
-		ParamTuner.bind("width", Integer.class, v -> width = v);
-		ParamTuner.bind("height", Integer.class, v -> height = v);
 		ParamTuner.bind("message", String.class, v -> message = v);
-		
-		// Init frame example
-		JFrame frame = new JFrame("Square example");
-		frame.setSize(600, 400);
-		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		frame.setContentPane(new JPanel() {
-			private static final long serialVersionUID = 1L;
-			
-			@Override
-			public void paintComponent(Graphics g) {
-				g.setColor(Color.RED);
-				g.fillRect(x, y, width, height);
-				
-			    Font font = new Font("Courier", Font.BOLD, 20);
-			    g.setFont(font);
-			    g.setColor(Color.red);          
-			    g.drawString(message, 10, 250);  
-			}
-			
-		});
-		frame.setVisible(true);
-		
-		// Update loop
-		for (;;) {
-			Thread.sleep(50);
-			frame.revalidate();
-			frame.repaint();
-		}
-		
-		
-	}
+    	
+	    VBox root = new VBox();
+	    canvas = new Canvas (300, 300);
+	    gc = canvas.getGraphicsContext2D();
+	    gc.setFill(Color.ORANGE);
+	    gc.fillRect(40, 100, 20, 20);
+	    gc.setStroke(Color.BLACK);
+	    gc.strokeRect(40, 100, 20, 20);
+	    root.getChildren().add(canvas);
 	
+	    Scene scene = new Scene(root);
+	    stage.setTitle("Hello libparamtuner");
+	    stage.setScene(scene);
+	    stage.show();
+	    
+        new AnimationTimer() {
+        	private long lastUpdate = 0 ;
+        	
+            public void handle(long now) {
+            	if (now - lastUpdate >= 15_000_000) { // 15 ms
+            		reaffichage();
+            		lastUpdate = now ;
+            	}
+            }
+        }.start();
+    }
+
+	public void reaffichage() {
+		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		gc.setFill(Color.BLACK);
+		gc.fillText(message, x, y);
+	}
+    
+    public static void main(String[] args) {
+            Application.launch(args);
+    }
 }
 
