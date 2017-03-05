@@ -1,7 +1,4 @@
 # Generated files
 *.o
 *.a
-
-# Executables
 *.exe
-console
