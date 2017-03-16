@@ -119,6 +119,8 @@ then you can put the path to the XML directly into the GUI.
 ## TODO list :
 
 * Add more graphical examples (C glut)
+* Configure javadoc:javadoc
 * Create unit test files for C++ and Java lib
 * Configure Travis CI for Github
 * JavaFX for GUI
+* Latency on Mac OS for Java Library
