@@ -119,9 +119,13 @@ import fr.univ_lille1.libparamtuner.parameters.Type;
  * 
  */
 public class ParamTuner {
-	
+
 	/* package */ static void printError(String message) {
 		System.err.println("libParamTuner: " + message);
+	}
+	
+	/* package */ static void printInfo(String message) {
+		System.out.println("libParamTuner: " + message);
 	}
 	
 	/*

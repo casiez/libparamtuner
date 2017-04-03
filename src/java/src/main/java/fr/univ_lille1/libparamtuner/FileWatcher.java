@@ -23,6 +23,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
+import java.nio.file.WatchEvent.Modifier;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.function.Consumer;
@@ -50,8 +51,46 @@ public class FileWatcher extends Thread {
 		// initialize a new watcher service
 		watcher = FileSystems.getDefault().newWatchService();
 		
-		key = parentPath.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
+		Modifier sensitivityModifier = getHIGHSensitivityModifier();
+		if (sensitivityModifier != null) {
+			key = parentPath.register(watcher,
+					new WatchEvent.Kind[] {StandardWatchEventKinds.ENTRY_MODIFY},
+					sensitivityModifier);
+		}
+		else {
+			key = parentPath.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY);
+		}
+		
 	}
+	
+
+	/**
+	 * Return a WathService Modifier that ask for a High sensitivity.
+	 * 
+	 * This modifier, in some Java for Mac OS implementation, allow to reduce
+	 * the time between event updates.
+	 * Because some modifier is specific to certain implementation of
+	 * Java (and is not part to the Java standard public library), we have to
+	 * get it via reflexion.
+	 * 
+	 * @return the modifier if it exist in the current Java implementation,
+	 * 		or null otherwise.
+	 */
+	private Modifier getHIGHSensitivityModifier() {
+		try {
+			/*
+			 * Java Sun implementation
+			 */
+			Class<?> c = Class.forName("com.sun.nio.file.SensitivityWatchEventModifier");
+			Modifier m = (Modifier) c.getField("HIGH").get(null);
+			ParamTuner.printInfo("Watcher Sensitivity Modifier: com.sun.nio.file.SensitivityWatchEventModifier.HIGH");
+			return m;
+		} catch (Exception e) {
+			ParamTuner.printInfo("Watcher Sensitivity Modifier: null");
+			return null; // fallback (other Java implementation may be handled here)
+		}
+	}
+	
 	
 	@Override
 	public void run() {
