@@ -17,60 +17,71 @@
  */
 package fr.univ_lille1.libparamtuner.gui.parameters_panel;
 
-import java.awt.Color;
-import java.awt.Dimension;
-
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-
 import fr.univ_lille1.libparamtuner.gui.MainFrame;
 import fr.univ_lille1.libparamtuner.parameters.BooleanParameter;
 import fr.univ_lille1.libparamtuner.parameters.FloatParameter;
 import fr.univ_lille1.libparamtuner.parameters.IntegerParameter;
 import fr.univ_lille1.libparamtuner.parameters.Parameter;
 import fr.univ_lille1.libparamtuner.parameters.StringParameter;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
 
-public abstract class ParameterPanel extends JPanel {
-	private static final long serialVersionUID = 1L;
+public abstract class ParameterPanel extends HBox {
 	
 	protected final MainFrame frame;
 	protected final Parameter parameter;
 	
 	public ParameterPanel(MainFrame f, int index, Parameter p) {
+		super(3);
 		frame = f;
 		parameter = p;
 		
-		setBackground((index % 2 == 0) ? new Color(215, 215, 215) : new Color(225, 225, 225));
-		setBorder(new EmptyBorder(2, 2, 2, 2));
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		
-		add(new JLabel(p.name));
 		
-		setToolTipText(p.name + " of type " + p.getType().name());
+		setBackground(new Background(new BackgroundFill((index % 2 == 0) ? Color.rgb(220, 220, 220) : Color.TRANSPARENT, null, null)));
+		setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(2))));
+		setAlignment(Pos.CENTER_LEFT);
+		
+		Label l = new Label(p.name);
+		l.setTooltip(new Tooltip(p.name + " of type " + p.getType().name()));
+		
+		
+		// the minWidth property of the label is bounded to the global "minWidth" property.
+		l.minWidthProperty().bind(f.minLabelSize);
+		
+		// listener that update the global "minWidth" property if the current label is larger
+		// so other labels will have the same "minWidth".
+		l.widthProperty().addListener((o, old, newValue) -> {
+			if ((Double)newValue > f.minLabelSize.doubleValue()) {
+				f.minLabelSize.setValue(newValue);
+			}
+		});
+		
+		
+		
+		add(l);
+		
+		
+	}
+	
+	
+	
+	protected void add(Node e) {
+		getChildren().add(e);
 	}
 	
 	
 	public void notifyContentModification() {
 		frame.onContentModify();
-	}
-	
-	@Override
-	public Dimension getPreferredSize() {
-		return new Dimension(frame.contentScroll.getViewport().getSize().width, super.getPreferredSize().height);
-	}
-	
-	
-	@Override
-	public Dimension getMaximumSize() {
-		return new Dimension(frame.contentScroll.getViewport().getSize().width, super.getMaximumSize().height);
-	}
-	
-	
-	@Override
-	public Dimension getMinimumSize() {
-		return new Dimension(frame.contentScroll.getViewport().getSize().width, super.getMinimumSize().height);
 	}
 	
 	

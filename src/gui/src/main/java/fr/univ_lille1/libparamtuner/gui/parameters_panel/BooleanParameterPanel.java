@@ -17,24 +17,22 @@
  */
 package fr.univ_lille1.libparamtuner.gui.parameters_panel;
 
-import javax.swing.JCheckBox;
-
 import fr.univ_lille1.libparamtuner.gui.MainFrame;
 import fr.univ_lille1.libparamtuner.parameters.BooleanParameter;
+import javafx.scene.control.CheckBox;
 
 public class BooleanParameterPanel extends ParameterPanel {
-	private static final long serialVersionUID = 1L;
 	
 	public BooleanParameterPanel(MainFrame f, int index, BooleanParameter p) {
 		super(f, index, p);
 		
-		JCheckBox box = new JCheckBox("Boolean value", p.getValue());
-		box.addActionListener(e -> {
-			p.setValue(box.isSelected());
+		CheckBox box = new CheckBox("Boolean value");
+		box.setSelected(p.getValue());
+		box.selectedProperty().addListener((o, old, newValue) -> {
+			p.setValue(newValue);
 			notifyContentModification();
 		});
 		box.setBackground(getBackground());
-		box.setContentAreaFilled(true);
 		add(box);
 	}
 	

@@ -17,119 +17,124 @@
  */
 package fr.univ_lille1.libparamtuner.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.border.EmptyBorder;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import fr.univ_lille1.libparamtuner.gui.parameters_panel.ParameterPanel;
 import fr.univ_lille1.libparamtuner.parameters.Parameter;
 import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
+import javafx.application.Application;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
-public class MainFrame extends JFrame {
-	private static final long serialVersionUID = 1L;
-	private JPanel contentPanel;
-	private JTextField textField;
-	public final JScrollPane contentScroll;
-	private JButton btnSave;
+public class MainFrame extends Application {
+	
+	private Stage stage;
+	private Scene scene;
+	
+	
+	private VBox contentPanel;
+	private TextField textField;
+	public ScrollPane contentScroll; // TODO private
+	private Button btnSave;
+
+	public DoubleProperty minLabelSize = new SimpleDoubleProperty(0); // TODO private
 	
 	
 	private ParameterFile loadedFile = null;
 	private boolean saved = true;
-	private boolean autosave = false;
+	private boolean autosave = true;
 	
 	
-	/**
-	 * Create the frame.
-	 */
-	public MainFrame() {
-		setTitle("ParamTuner GUI");
-		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				if (confirmSaveBeforeClosingFile()) {
-					dispose();
-					System.exit(0);
-				}
+	
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		stage = primaryStage;
+		stage.setTitle("ParamTuner GUI");
+		
+		stage.setOnCloseRequest((event) -> {
+			if (confirmSaveBeforeClosingFile()) {
+				stage.hide();
+				System.exit(0);
+			}
+			else {
+				event.consume();
 			}
 		});
-		setSize(500, 600);
 		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		setLocation((int) (screenSize.getWidth() / 2 - getSize().getWidth() / 2),
-				(int) (screenSize.getHeight() / 2 - getSize().getHeight() / 2));
+		BorderPane globalPanel = new BorderPane();
 		
-		JPanel globalPanel = new JPanel();
-		globalPanel.setBorder(new EmptyBorder(3, 3, 3, 3));
-		setContentPane(globalPanel);
-		globalPanel.setLayout(new BorderLayout(0, 0));
+		scene = new Scene(globalPanel, 500, 600);
+		stage.setScene(scene);
+		stage.sizeToScene();
+		stage.centerOnScreen();
 		
-		JPanel topPanel = new JPanel();
-		topPanel.setBorder(new EmptyBorder(2, 2, 3, 2));
-		globalPanel.add(topPanel, BorderLayout.NORTH);
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
+		globalPanel.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(3))));
 		
-		JLabel lblNewLabel = new JLabel("XML File :");
-		topPanel.add(lblNewLabel);
 		
-		textField = new JTextField();
-		topPanel.add(textField);
-		textField.addActionListener(e -> loadFile(textField.getText()));
 		
-		JButton btnCharger = new JButton("Load");
-		topPanel.add(btnCharger);
-		btnCharger.addActionListener(e -> loadFile(textField.getText()));
+		HBox topPanel = new HBox(3);
+		topPanel.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(2, 2, 3, 2))));
+		globalPanel.setTop(topPanel);
+		topPanel.setAlignment(Pos.CENTER);
 		
-		btnSave = new JButton("Save");
-		btnSave.addActionListener(e -> saveFile());
-		btnSave.setEnabled(false);
-		topPanel.add(btnSave);
+		Label lblNewLabel = new Label("XML File :");
+		topPanel.getChildren().add(lblNewLabel);
 		
-		JCheckBox chckbxAutosave = new JCheckBox("Autosave", autosave);
-		chckbxAutosave.addActionListener(e -> setAutosave(chckbxAutosave.isSelected()));
-		topPanel.add(chckbxAutosave);
+		textField = new TextField();
+		topPanel.getChildren().add(textField);
+		textField.setPrefWidth(20);
+		HBox.setHgrow(textField, Priority.ALWAYS);
+		textField.setOnAction(e -> loadFile(textField.getText()));
 		
-		contentScroll = new JScrollPane();
-		contentScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		contentScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		globalPanel.add(contentScroll, BorderLayout.CENTER);
+		Button btnCharger = new Button("Load");
+		topPanel.getChildren().add(btnCharger);
+		btnCharger.setOnAction(e -> loadFile(textField.getText()));
 		
-		contentPanel = new JPanel() {
-			private static final long serialVersionUID = 1L;
-			
-			@Override
-			public Dimension getPreferredSize() {
-				return new Dimension(contentScroll.getViewport().getSize().width, super.getPreferredSize().height);
-			}
-			
-			@Override
-			public Dimension getMaximumSize() {
-				return new Dimension(contentScroll.getViewport().getSize().width, super.getMaximumSize().height);
-			}
-			
-		};
-		contentPanel.setBorder(new EmptyBorder(3, 3, 3, 3));
-		contentScroll.setViewportView(contentPanel);
-		contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+		btnSave = new Button("Save");
+		btnSave.setOnAction(e -> saveFile());
+		btnSave.setDisable(true);
+		topPanel.getChildren().add(btnSave);
 		
+		ToggleButton chckbxAutosave = new ToggleButton("Autosave");
+		chckbxAutosave.setSelected(autosave);
+		chckbxAutosave.setOnAction(e -> setAutosave(chckbxAutosave.isSelected()));
+		topPanel.getChildren().add(chckbxAutosave);
+		
+		contentScroll = new ScrollPane();
+		contentScroll.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		contentScroll.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
+		globalPanel.setCenter(contentScroll);
+		
+		contentPanel = new VBox();
+		contentPanel.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(3))));
+		contentScroll.setContent(contentPanel);
+		contentScroll.setFitToWidth(true);
+		
+		stage.show();
 		
 	}
+	
+	
+	
 	
 	
 	
@@ -140,8 +145,7 @@ public class MainFrame extends JFrame {
 		try {
 			loadedFile.save();
 		} catch (TransformerException | ParserConfigurationException e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+			FXDialogUtils.showExceptionDialog("Unable to save the file", "Path: " + loadedFile.file, e);
 			return;
 		}
 		
@@ -157,11 +161,11 @@ public class MainFrame extends JFrame {
 	private boolean confirmSaveBeforeClosingFile() {
 		if (saved)
 			return true;
-		int ret = JOptionPane.showOptionDialog(this, "Do you want to save the current file ?", "Save current file",
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, JOptionPane.YES_OPTION);
-		if (ret == JOptionPane.CANCEL_OPTION)
+		String ret = FXDialogUtils.showConfirmDialog("Save current file ?", null, "Do you want to save the current file ?",
+				"Yes", "No", "Cancel");
+		if (ret == null || ret.equals("Cancel"))
 			return false;
-		if (ret == JOptionPane.YES_OPTION)
+		if (ret.equals("Yes"))
 			saveFile();
 		return true;
 	}
@@ -169,7 +173,7 @@ public class MainFrame extends JFrame {
 	public void loadFile(String path) {
 		
 		if (path.trim().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Please specify a file path", "Error", JOptionPane.ERROR_MESSAGE);
+			FXDialogUtils.showMessageDialog(AlertType.ERROR, "Error", null, "Please specify a file path");
 			return;
 		}
 		
@@ -190,11 +194,12 @@ public class MainFrame extends JFrame {
 			}
 			
 			
+			
+			
 			loadedFile = pFile;
 			
 		} catch (Exception e) {
-			e.printStackTrace();
-			JOptionPane.showMessageDialog(this, e.getMessage(), e.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+			FXDialogUtils.showExceptionDialog("Unable to load the file", "Path: " + path, e);
 			clearConfigEntries();
 			return;
 		}
@@ -203,15 +208,13 @@ public class MainFrame extends JFrame {
 	
 	
 	private void clearConfigEntries() {
-		contentPanel.removeAll();
-		contentPanel.revalidate();
-		contentPanel.repaint();
+		contentPanel.getChildren().forEach(entry -> ((Label)((ParameterPanel)entry).getChildren().get(0)).minWidthProperty().unbind());
+		contentPanel.getChildren().clear();
+		minLabelSize.setValue(0);
 	}
 	
 	private void addConfigEntry(Parameter p) {
-		contentPanel.add(ParameterPanel.fromParameter(this, contentPanel.getComponentCount(), p));
-		contentPanel.revalidate();
-		contentPanel.repaint();
+		contentPanel.getChildren().add(ParameterPanel.fromParameter(this, contentPanel.getChildren().size(), p));
 	}
 	
 	
@@ -244,7 +247,7 @@ public class MainFrame extends JFrame {
 	
 	
 	private void updateSaveButton() {
-		btnSave.setEnabled(!autosave && !saved);
+		btnSave.setDisable(autosave || saved);
 	}
 	
 }

@@ -17,10 +17,9 @@
  */
 package fr.univ_lille1.libparamtuner.gui;
 
-import java.awt.EventQueue;
 import java.awt.GraphicsEnvironment;
 
-import javax.swing.UIManager;
+import javafx.application.Application;
 
 public class Main {
 	
@@ -33,22 +32,7 @@ public class Main {
 			System.exit(1);
 		}
 		
-		try {
-			// GUI will have the OS theme or desktop environment's theme
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		MainFrame frame = new MainFrame();
-		EventQueue.invokeLater(() -> {
-			frame.setVisible(true);
-		});
-		if (args.length > 0) {
-			EventQueue.invokeLater(() -> {
-				frame.setFilePathAndLoad(args[0]);
-			});
-		}
+		Application.launch(MainFrame.class, args);
 		
 	}
 	
