@@ -26,7 +26,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class Carre extends Application {
+public class Square extends Application {
 	GraphicsContext gc;
 	Canvas canvas;
 	int x = 30, y = 30;
