@@ -30,7 +30,7 @@ ifeq ($(shell uname),Darwin)
 	CPPFLAGS += -framework CoreServices
 endif
 
-LDINCS = -I../../src/cpp
+LDINCS = -I../../../src/cpp
 
 all: $(TARGETS)
 
@@ -45,7 +45,7 @@ clean:
 .PHONY: clean all
 
 libparamtuner.a:
-	cd ../../src/cpp && make libparamtuner.a && cp libparamtuner.a ../../examples/cpp/
+	cd ../../../src/cpp && make libparamtuner.a && cp libparamtuner.a ../../examples/cpp/console/
 
 # targets
 console: libparamtuner.a console.o

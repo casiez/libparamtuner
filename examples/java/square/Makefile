@@ -16,6 +16,13 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
+ifeq ($(OS),Windows_NT)
+    CP_SEP = ;
+else
+    CP_SEP = :
+endif
+
+
 all: exec 
 
 %.class: %.java
@@ -32,4 +39,4 @@ libParamTuner.jar:
 
 	
 exec: libParamTuner.jar Square.class
-	@java -cp libParamTuner.jar:. Square
+	java -cp "libParamTuner.jar$(CP_SEP)." Square
