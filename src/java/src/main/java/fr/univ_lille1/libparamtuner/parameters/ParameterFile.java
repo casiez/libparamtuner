@@ -152,7 +152,7 @@ public class ParameterFile {
 		return parameters.get(name);
 	}
 	
-	public void removeSetting(String name) {
+	public void removeParameter(String name) {
 		parameters.remove(name);
 	}
 	
