@@ -115,12 +115,3 @@ or
     java -jar ParamTunerGUI.jar
 
 then you can put the path to the XML directly into the GUI.
-
-## TODO list :
-
-* Add more graphical examples (C glut)
-* Configure javadoc:javadoc
-* Create unit test files for C++ and Java lib
-* Configure Travis CI for Github
-* Latency on Mac OS for Java Library
-* Add a SavingThread to GUI to avoid queuing of multiple "save" instruction
