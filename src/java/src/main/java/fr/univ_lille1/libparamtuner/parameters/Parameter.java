@@ -97,7 +97,7 @@ public abstract class Parameter {
 	/* package */ Element toXMLElement(Document doc) {
 		Element el = doc.createElement(name);
 		el.setAttribute("value", value);
-		el.setAttribute("type", Type.getTypeFromParamInstance(this.getClass()).getTypeAttributesValues()[0]);
+		el.setAttribute("type", getType().getTypeAttributesValues()[0]);
 		if (min != 0 || max != 0) {
 			el.setAttribute("min", Double.toString(min));
 			el.setAttribute("max", Double.toString(max));
@@ -108,9 +108,7 @@ public abstract class Parameter {
 	
 	
 	/* package */ static Parameter fromXMLElement(Element el) throws Exception {
-		String typeAttrValue = el.getAttribute("type");
-		
-		Type type = Type.getType(typeAttrValue);
+		Type type = Type.getType(el.getAttribute("type"));
 		
 		if (type == null)
 			throw new IllegalArgumentException("Element has not a valid type attribute : '" + type + "'");
