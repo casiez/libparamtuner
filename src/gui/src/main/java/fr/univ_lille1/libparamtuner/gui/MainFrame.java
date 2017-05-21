@@ -17,6 +17,8 @@
  */
 package fr.univ_lille1.libparamtuner.gui;
 
+import java.io.File;
+
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -28,7 +30,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -43,6 +44,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 public class MainFrame extends Application {
@@ -50,7 +53,7 @@ public class MainFrame extends Application {
 	private Stage stage;
 	private Scene scene;
 	
-	
+	final FileChooser fileChooser = new FileChooser();
 	private VBox contentPanel;
 	private TextField textField;
 	public ScrollPane contentScroll; // TODO private
@@ -90,6 +93,11 @@ public class MainFrame extends Application {
 		globalPanel.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(3))));
 		
 		
+		fileChooser.setInitialDirectory(new File("."));
+		ExtensionFilter xmlFilter = new ExtensionFilter("XML Files", "*.xml");
+		fileChooser.getExtensionFilters().add(xmlFilter);
+		fileChooser.getExtensionFilters().add(new ExtensionFilter("All files", "*"));
+		fileChooser.setSelectedExtensionFilter(xmlFilter);
 		
 		HBox topPanel = new HBox(3);
 		topPanel.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(2, 2, 3, 2))));
@@ -104,6 +112,14 @@ public class MainFrame extends Application {
 		textField.setPrefWidth(20);
 		HBox.setHgrow(textField, Priority.ALWAYS);
 		textField.setOnAction(e -> loadFile(textField.getText()));
+		
+		Button btnExplorer = new Button("...");
+		topPanel.getChildren().add(btnExplorer);
+		btnExplorer.setOnAction(e -> {
+			File f = fileChooser.showOpenDialog(stage);
+			if (f != null)
+				setFilePathAndLoad(f.getPath());
+		});
 		
 		Button btnCharger = new Button("Load");
 		topPanel.getChildren().add(btnCharger);
@@ -173,7 +189,12 @@ public class MainFrame extends Application {
 	public void loadFile(String path) {
 		
 		if (path.trim().isEmpty()) {
-			FXDialogUtils.showMessageDialog(AlertType.ERROR, "Error", null, "Please specify a file path");
+			String value = FXDialogUtils.showConfirmDialog("Error", null, "Path not specified. Do you want to explore ?", "Yes", "No");
+			if ("Yes".equals(value)) {
+				File f = fileChooser.showOpenDialog(stage);
+				if (f != null)
+					setFilePathAndLoad(f.getPath());
+			}
 			return;
 		}
 		
@@ -199,8 +220,14 @@ public class MainFrame extends Application {
 			loadedFile = pFile;
 			
 		} catch (Exception e) {
-			FXDialogUtils.showExceptionDialog("Unable to load the file", "Path: " + path, e);
+			e.printStackTrace();
 			clearConfigEntries();
+			String value = FXDialogUtils.showConfirmDialog("Unable to load the file", "Path: " + path, e.getMessage()+"\n\nDo you want to explore for an other file ?", "Yes", "No");
+			if ("Yes".equals(value)) {
+				File f = fileChooser.showOpenDialog(stage);
+				if (f != null)
+					setFilePathAndLoad(f.getPath());
+			}
 			return;
 		}
 		
