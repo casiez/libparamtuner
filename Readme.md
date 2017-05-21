@@ -3,7 +3,7 @@
 Cross-platform library to ease the interactive tuning of parameters without the need to recompile code.
 
 ## Minimal example
-```
+```cpp
 #include <iostream>
 #include <string>
 #include "paramtuner.h"
@@ -11,10 +11,10 @@ Cross-platform library to ease the interactive tuning of parameters without the 
 #ifdef _WIN32
 #   include <windows.h>
 #   define SLEEP(ms) (Sleep(ms))
-#else 
-#   include <unistd.h> 
+#else
+#   include <unistd.h>
 #   define SLEEP(ms) (usleep(ms * 1000))
-#endif 
+#endif
 
 using namespace std;
 
