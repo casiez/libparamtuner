@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ParamList>
+	<x1 max="300.0" min="0.0" type="double" value="0"/>
+	<x2 max="300.0" min="0.0" type="double" value="200"/>
+	<x3 max="300.0" min="0.0" type="double" value="20"/>
+	<y1 max="300.0" min="0.0" type="double" value="0"/>
+	<y2 max="300.0" min="0.0" type="double" value="200"/>
+	<y3 max="300.0" min="0.0" type="double" value="200"/>
+</ParamList>
