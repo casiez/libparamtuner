@@ -29,51 +29,53 @@ import javafx.stage.Stage;
 public class Square extends Application {
 	GraphicsContext gc;
 	Canvas canvas;
-	int x = 30, y = 30;
+	int x = 10, y = 10, width = 400, height = 200;
 	String message = "Hello world";
 	
-    public void start(Stage stage) {
+    @Override
+	public void start(Stage stage) {
 		// Load settings file 
 		ParamTuner.load("settings.xml");
 
 		ParamTuner.bind("x", Integer.class, v -> x = v);
 		ParamTuner.bind("y", Integer.class, v -> y = v);
+		ParamTuner.bind("width", Integer.class, v -> width = v);
+		ParamTuner.bind("height", Integer.class, v -> height = v);
 		ParamTuner.bind("message", String.class, v -> message = v);
     	
 	    VBox root = new VBox();
-	    canvas = new Canvas (300, 300);
+	    canvas = new Canvas(600, 400);
 	    gc = canvas.getGraphicsContext2D();
-	    gc.setFill(Color.ORANGE);
-	    gc.fillRect(40, 100, 20, 20);
-	    gc.setStroke(Color.BLACK);
-	    gc.strokeRect(40, 100, 20, 20);
 	    root.getChildren().add(canvas);
 	
-	    Scene scene = new Scene(root);
 	    stage.setTitle("Hello libparamtuner");
-	    stage.setScene(scene);
+	    stage.setScene(new Scene(root));
 	    stage.show();
+		stage.setOnCloseRequest((we) -> System.exit(0));
 	    
         new AnimationTimer() {
-        	private long lastUpdate = 0 ;
+        	private long lastUpdate = 0;
         	
-            public void handle(long now) {
+            @Override
+			public void handle(long now) {
             	if (now - lastUpdate >= 15_000_000) { // 15 ms
-            		reaffichage();
-            		lastUpdate = now ;
+            		update();
+            		lastUpdate = now;
             	}
             }
         }.start();
     }
 
-	public void reaffichage() {
+	public void update() {
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+		gc.setFill(Color.RED);
+	    gc.fillRect(x, y, width, height);
 		gc.setFill(Color.BLACK);
-		gc.fillText(message, x, y);
+		gc.fillText(message, x+3, y+20);
 	}
     
     public static void main(String[] args) {
-            Application.launch(args);
+        launch(args);
     }
 }
 
