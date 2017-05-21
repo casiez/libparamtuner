@@ -254,7 +254,7 @@ public class ParamTuner {
 	/**
 		Bind a variable with a parameter in the XML file.<br>
 		<br>
-		This method may be called before or after calling lptLoad().
+		This method may be called before or after calling one of <code>load()</code> methods.
 		The internal storage of binded values is always preserved.<br>
 		<br>
 		If a variable is already binded with the specified name, the old
