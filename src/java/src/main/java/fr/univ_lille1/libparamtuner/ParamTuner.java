@@ -154,7 +154,7 @@ public class ParamTuner {
 			return;
 		
 		try {
-			ParameterFile parameterFile = new ParameterFile(fileWatcherInstance.confFile, true, true);
+			ParameterFile parameterFile = new ParameterFile(fileWatcherInstance.confFile, true);
 			
 			for (Parameter param : parameterFile.getAll()) {
 				

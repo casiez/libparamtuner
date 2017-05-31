@@ -18,7 +18,9 @@
 package fr.univ_lille1.libparamtuner.parameters;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +31,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -45,46 +46,15 @@ public class ParameterFile {
 	
 	public final File file;
 	
-	
 	public ParameterFile(String fileName, boolean loadFromFile) throws Exception {
 		this(new File(fileName), loadFromFile);
 	}
 	
 	public ParameterFile(File f, boolean loadFromFile) throws Exception {
-		this(f, loadFromFile, false);
-	}
-	
-	public ParameterFile(String fileName, boolean loadFromFile, boolean retryLoading) throws Exception {
-		this(new File(fileName), loadFromFile, retryLoading);
-	}
-	
-	public ParameterFile(File f, boolean loadFromFile, boolean retryLoading) throws Exception {
 		file = f;
 		
 		if (loadFromFile) {
-			DocumentBuilder builder = getXMLBuilder();
-			Document doc = null;
-			int i = 0;
-			do {
-				/*
-				 * Sometimes, the file is not readable when we receive the notification
-				 * from the watcher (surely because an other software is still writing
-				 * in the file). We try multiple times to read the file until it
-				 * succeeds.
-				 */
-				try {
-					doc = builder.parse(file);
-				} catch (IOException e) {
-					/* In case of the file will not readable anymore (deleted ? )
-					 * we count and stop if we've done to many trials
-					 */
-					i++;
-					if (i >= 10 || !retryLoading)
-						throw e;
-					Thread.sleep(50); // Wait before retry
-				}
-			} while (doc == null);
-			readDocument(doc);
+			load();
 		}
 	}
 	
@@ -133,13 +103,67 @@ public class ParameterFile {
 	
 	
 	
-	public void save() throws TransformerException, ParserConfigurationException {
+	public void save() throws Exception {
 		
+		// converting content ton XML String
 		Transformer tf = TransformerFactory.newInstance().newTransformer();
 		tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		tf.setOutputProperty(OutputKeys.INDENT, "yes");
-		tf.transform(new DOMSource(createXMLDocument()), new StreamResult(file));
+		String content;
+		try (StringWriter swr = new StringWriter()) {
+			tf.transform(new DOMSource(createXMLDocument()), new StreamResult(swr));
+			content = swr.toString();
+		}
 		
+		// saving XML to file (multiple try if needed)
+		boolean ok = false;
+		for(int i = 0; !ok; i++) {
+			/*
+			 * Sometimes, the file is not writable, surely because an other
+			 * software is still reading/writing in the file. We try multiple
+			 * times to write the file until it succeeds.
+			 */
+			try (FileWriter wr = new FileWriter(file, false)) {
+				wr.write(content);
+				ok = true;
+			} catch (IOException e) {
+				/* In case of the file will not writable anymore (access right ?)
+				 * we count and stop if we've done to many trials
+				 */
+				if (i >= 10)
+					throw e;
+				Thread.sleep(50); // Wait before retry
+				continue;
+			}
+			
+		}
+	}
+	
+	
+	public void load() throws Exception {
+		DocumentBuilder builder = getXMLBuilder();
+		Document doc = null;
+		int i = 0;
+		do {
+			/*
+			 * Sometimes, the file is not readable when we receive the notification
+			 * from the watcher (surely because an other software is still writing
+			 * in the file). We try multiple times to read the file until it
+			 * succeeds.
+			 */
+			try {
+				doc = builder.parse(file);
+			} catch (Exception e) {
+				/* In case of the file will not readable anymore (deleted ? )
+				 * we count and stop if we've done to many trials
+				 */
+				i++;
+				if (i >= 10)
+					throw e;
+				Thread.sleep(50); // Wait before retry
+			}
+		} while (doc == null);
+		readDocument(doc);
 	}
 	
 	

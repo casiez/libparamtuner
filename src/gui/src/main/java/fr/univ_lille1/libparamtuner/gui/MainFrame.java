@@ -18,9 +18,7 @@
 package fr.univ_lille1.libparamtuner.gui;
 
 import java.io.File;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import fr.univ_lille1.libparamtuner.gui.parameters_panel.ParameterPanel;
 import fr.univ_lille1.libparamtuner.parameters.Parameter;
@@ -65,6 +63,8 @@ public class MainFrame extends Application {
 	private ParameterFile loadedFile = null;
 	private boolean saved = true;
 	private boolean autosave = true;
+	
+	private SaveThread saveThread = new SaveThread();
 	
 	
 	
@@ -145,6 +145,8 @@ public class MainFrame extends Application {
 		contentScroll.setContent(contentPanel);
 		contentScroll.setFitToWidth(true);
 		
+		saveThread.start();
+		
 		stage.show();
 		
 	}
@@ -158,16 +160,13 @@ public class MainFrame extends Application {
 		if (saved || loadedFile == null)
 			return;
 		
-		try {
-			loadedFile.save();
-		} catch (TransformerException | ParserConfigurationException e) {
-			FXDialogUtils.showExceptionDialog("Unable to save the file", "Path: " + loadedFile.file, e);
-			return;
-		}
+		saveThread.askForSave();
 		
 		setSaved(true);
 		
 	}
+	
+	
 	
 	/**
 	 * Ask to the user if he want to save or not save the file before closing it.
@@ -208,7 +207,7 @@ public class MainFrame extends Application {
 		
 		
 		try {
-			pFile = new ParameterFile(path, true, true);
+			pFile = new ParameterFile(path, true);
 			
 			for (Parameter p : pFile.getAll()) {
 				addConfigEntry(p);
@@ -275,6 +274,44 @@ public class MainFrame extends Application {
 	
 	private void updateSaveButton() {
 		btnSave.setDisable(autosave || saved);
+	}
+	
+	
+	
+	
+	
+	private class SaveThread extends Thread {
+		
+		private AtomicBoolean wantToSave = new AtomicBoolean(false);
+		
+		@Override
+		public void run() {
+			try {
+				for(;;) {
+					AtomicUtils.waitForValue(wantToSave, true, 50);
+					wantToSave.set(false);
+					
+					try {
+						loadedFile.save();
+					} catch (Exception e) {
+						FXDialogUtils.showExceptionDialog("Unable to save the file", "Path: " + loadedFile.file, e);
+						return;
+					}
+					
+					Thread.sleep(100);
+				}
+			} catch (InterruptedException e) {
+				return;
+			}
+		}
+		
+		
+		
+		public void askForSave() {
+			wantToSave.set(true);
+		}
+		
+		
 	}
 	
 }
