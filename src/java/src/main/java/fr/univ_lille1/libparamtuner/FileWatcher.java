@@ -19,6 +19,7 @@ package fr.univ_lille1.libparamtuner;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
@@ -82,9 +83,23 @@ class FileWatcher extends Thread {
 			 * Java Sun implementation
 			 */
 			Class<?> c = Class.forName("com.sun.nio.file.SensitivityWatchEventModifier");
-			Modifier m = (Modifier) c.getField("HIGH").get(null);
+			Modifier watcherModifier = (Modifier) c.getField("HIGH").get(null);
 			ParamTuner.printInfo("Watcher Sensitivity Modifier: com.sun.nio.file.SensitivityWatchEventModifier.HIGH");
-			return m;
+			
+			/*
+			 * This watcher modifier is, by default, setted with an interval of 2 seconds
+			 */
+			Field sensitivityField = c.getDeclaredField("sensitivity");
+			sensitivityField.setAccessible(true);
+			// remove the final modifier of the field sensitivity (reflection-ception !)
+			Field jModifiersField = Field.class.getDeclaredField("modifiers");
+			jModifiersField.setAccessible(true);
+			jModifiersField.setInt(sensitivityField, sensitivityField.getModifiers() & ~java.lang.reflect.Modifier.FINAL);
+			
+			sensitivityField.setInt(watcherModifier, 1);
+			ParamTuner.printInfo("Watcher Sensitivity Modifier: com.sun.nio.file.SensitivityWatchEventModifier.HIGH set sensitivity to 1 second via reflexion");
+			
+			return watcherModifier;
 		} catch (Exception e) {
 			ParamTuner.printInfo("Watcher Sensitivity Modifier: null");
 			return null; // fallback (other Java implementation may be handled here)
