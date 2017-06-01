@@ -28,7 +28,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.function.Consumer;
 
-public class FileWatcher extends Thread {
+class FileWatcher extends Thread {
 	public final File confFile;
 	private final Path parentPath;
 	

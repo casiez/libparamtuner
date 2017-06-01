@@ -70,7 +70,7 @@ import fr.univ_lille1.libparamtuner.parameters.Type;
  *  		ParamTuner.load("settings.xml"); // relative path are allowed
  *  
  *  		// we use lambda expression here. v is the new value read in file.
- *  		ParamTuner.bind("myString", String.class, v -> stringValue = v);
+ *  		ParamTuner.bind("myString", String.class, v -&gt; stringValue = v);
  *  		
  *  		// we use method reference here, if you have a setter for your variable
  *  		ParamTuner.bind("myInteger", Integer.class, Foo::setInt); 
@@ -87,8 +87,8 @@ import fr.univ_lille1.libparamtuner.parameters.Type;
  *  </li>
  * </ol>
  * 
- * <b>List of supported types :</b>
  * <table border="1">
+ * 	<caption>List of supported types</caption>
  * 	<tr>
  * 		<td>Java type</td>
  * 		<td><code>type</code> attribute</td>
@@ -259,6 +259,9 @@ public class ParamTuner {
 		<br>
 		If a variable is already binded with the specified name, the old
 		binding will be erased.
+		
+		@param <T> type of the variable binded to the parameter. This is related to <code>javaType</code>
+				method parameter.
 		
 		@param parameterName the parameter name, that is equal to the node name
 		containing the parameter value.
