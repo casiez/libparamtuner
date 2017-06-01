@@ -57,7 +57,7 @@ protected:
 	}
 	
 public:
-	FSEventsFileSystemWatcher(std::string path, voidfunc callback) :
+	FSEventsFileSystemWatcher(std::string path, void (*callback)(void)) :
 			FileSystemWatcher(path, callback)
 	{
 	    CFStringRef mypath = CFStringCreateWithCString(kCFAllocatorDefault, path.c_str(), kCFStringEncodingMacRoman);

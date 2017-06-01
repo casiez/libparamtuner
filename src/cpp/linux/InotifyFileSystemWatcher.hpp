@@ -63,7 +63,7 @@ protected:
 	}
 	
 public:
-	InotifyFileSystemWatcher(const std::string &path, voidfunc callback) :
+	InotifyFileSystemWatcher(const std::string &path, void (*callback)(void)) :
 			FileSystemWatcher(path, callback),
 			inotifyFileDesc(inotify_init()),
 			inotifyListenerDesc(inotify_add_watch(inotifyFileDesc, path.c_str(), IN_MODIFY)),

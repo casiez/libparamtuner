@@ -18,7 +18,6 @@
 #include "paramtuner.h"
 
 #include "FileSystemWatcher.hpp"
-#include "FileSystemWatcherFactory.hpp"
 #include "rapidxml-1.13/rapidxml.hpp"
 
 #include <map>
@@ -158,7 +157,7 @@ namespace ParamTuner {
 			delete watcher;
 
 		// Construct the file system watcher depending on current OS
-		watcher = createFileSystemWatcher(path, fileModificationCallback);
+		watcher = FileSystemWatcher::createFileSystemWatcher(path, fileModificationCallback);
 		if (!watcher)
 			return -1;
 

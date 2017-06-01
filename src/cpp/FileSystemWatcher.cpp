@@ -15,11 +15,7 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef FILE_SYSTEM_WATCHER_FACTORY_HPP
-#define FILE_SYSTEM_WATCHER_FACTORY_HPP
-
 #include "FileSystemWatcher.hpp"
-
 
 
 #if defined __linux__
@@ -30,11 +26,28 @@
 	#include "windows/Win32FileSystemWatcher.hpp"
 #endif
 
-
 #include <string>
 
+using namespace std;
 
-FileSystemWatcher* createFileSystemWatcher(const std::string &path, voidfunc callback) {
+
+/*
+ * FileSystemWatcher implementation
+ */
+FileSystemWatcher::FileSystemWatcher(const string &path, void (*callback)(void)) :
+			path(path),
+			callback(callback) {
+}
+void FileSystemWatcher::receiveSignal() {
+	update();
+	callback();
+}
+string FileSystemWatcher::getPath() const {
+	return path;
+}
+
+/* static method */
+FileSystemWatcher* FileSystemWatcher::createFileSystemWatcher(const std::string &path, void (*callback)(void)) {
 	
 	#if defined __linux__
 		return new InotifyFileSystemWatcher(path, callback);
@@ -47,15 +60,4 @@ FileSystemWatcher* createFileSystemWatcher(const std::string &path, voidfunc cal
 	#endif
 	
 }
-
-
-
-#endif
-
-
-
-
-
-
-
 

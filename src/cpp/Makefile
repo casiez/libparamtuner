@@ -20,7 +20,7 @@ AR = ar cqs
 
 TARGET_LIB = libparamtuner.a
 
-CPPFLAGS = -std=c++11 -Wall -Wextra -Wno-unused-parameter
+CPPFLAGS = -std=c++11 -Wall -Wextra
 
 ifeq ($(OS),Windows_NT)
     CPPFLAGS += -DUNICODE
@@ -39,7 +39,7 @@ doc:
 	$(CXX) -c $(CPPFLAGS) $(LDINCS) -o $@ $<
 
 
-$(TARGET_LIB): paramtuner.o
+$(TARGET_LIB): paramtuner.o FileSystemWatcher.o
 	$(AR) $@ $^
 
 clean:

@@ -84,7 +84,7 @@ protected:
 	}
 	
 public:
-	Win32FileSystemWatcher(std::string path, voidfunc callback) :
+	Win32FileSystemWatcher(std::string path, void (*callback)(void)) :
 			FileSystemWatcher(path, callback)
 	{
 		// lowercase path

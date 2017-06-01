@@ -20,42 +20,25 @@
 
 #include <string>
 
-typedef void (*voidfunc)(void);
-
 
 
 class FileSystemWatcher {
 	
 private:
 	std::string path;
-	voidfunc callback;
+	void (*callback)(void);
 
 protected:
-	
 	virtual void update() = 0;
+	FileSystemWatcher(const std::string &path, void (*callback)(void));
+	void receiveSignal();
 	
 public:
-	FileSystemWatcher(const std::string &path, voidfunc callback) :
-			path(path),
-			callback(callback) {
-	}
-	
-	
 	virtual ~FileSystemWatcher() {}
 	
+	std::string getPath() const;
 	
-	void receiveSignal() {
-		update();
-		callback();
-	}
-	
-	std::string getPath() const {
-		return path;
-	}
-	
-	
-	
-	
+	static FileSystemWatcher* createFileSystemWatcher(const std::string &path, void (*callback)(void));
 };
 
 
