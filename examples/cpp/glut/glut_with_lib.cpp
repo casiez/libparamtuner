@@ -40,7 +40,12 @@ double x1 = 0, y1 = 0, x2 = 200, y2 = 200, x3 = 20, y3 = 200;
 
 void display(void)
 {
+    static float angle=0.0;
+    angle+=1.0;
     glClear(GL_COLOR_BUFFER_BIT);
+    glPushMatrix();
+    glTranslatef(150.0,150.0,0.0);
+    glRotatef(angle, 0.0, 0.0, 1.0);
     glBegin(GL_TRIANGLES);
     glColor3f(0.0, 0.0, 1.0);  /* blue */
     glVertex2i(x1, y1);
@@ -49,6 +54,7 @@ void display(void)
     glColor3f(1.0, 0.0, 0.0);  /* red */
     glVertex2i(x3, y3);
     glEnd();
+    glPopMatrix();
     glFlush();  /* Single buffered, so needs a flush. */
 }
 
@@ -65,14 +71,14 @@ void update() {
 
 int main(int argc, char **argv)
 {
-/*
+
     ParamTuner::load("settings.xml");
     ParamTuner::bind("x1", &x1);
     ParamTuner::bind("y1", &y1);
     ParamTuner::bind("x2", &x2);
     ParamTuner::bind("y2", &y2);
     ParamTuner::bind("x3", &x3);
-    ParamTuner::bind("y3", &y3);*/
+    ParamTuner::bind("y3", &y3);
     glutInit(&argc, argv);
     glutCreateWindow("Single Triangle - libParamTuner examples");
     glutDisplayFunc(display);
