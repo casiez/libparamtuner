@@ -30,7 +30,7 @@ void reshape(int w, int h)
   glTranslatef(0, -h, 0);       /* Shift origin up to upper-left corner. */
 }
 
-long time = 0;
+long ttime = 0;
 long targetDeltaTime = 33; // 30 FPS = 33 ms/frame
 
 
@@ -58,10 +58,10 @@ void display(void)
 
 void update() {
 	long currTime = glutGet(GLUT_ELAPSED_TIME);
-	if (currTime < time + targetDeltaTime) {
-		SLEEP(time + targetDeltaTime - currTime);
+	if (currTime < ttime + targetDeltaTime) {
+		SLEEP(ttime + targetDeltaTime - currTime);
 	}
-	time += targetDeltaTime;
+	ttime += targetDeltaTime;
 	display();
 }
 
