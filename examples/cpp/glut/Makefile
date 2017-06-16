@@ -32,8 +32,8 @@ ifeq ($(shell uname),Darwin)
 endif
 
 ifeq ($(shell uname), Linux)
-	LDFLAGS = -lglut -lGL 
-endif 
+	LDFLAGS = -lglut -lGL
+endif
 
 LDINCS = -I../../../src/cpp
 
@@ -55,7 +55,7 @@ libparamtuner.a:
 
 # targets
 glut_with_lib: libparamtuner.a glut_with_lib.o
-	$(CXX) $(CPPFLAGS) -o $@ glut_with_lib.o $(LDFLAGS) -lpthread -L. -lparamtuner
+	$(CXX) $(CPPFLAGS) -o $@ glut_with_lib.o $(LDFLAGS) -lparamtuner -lpthread -L. 
 
 glut_without_lib: glut_without_lib.o
-	$(CXX) $(CPPFLAGS) -o $@ glut_without_lib.o -L. $(LDFLAGS) 
+	$(CXX) $(CPPFLAGS) -o $@ glut_without_lib.o -L. $(LDFLAGS)
