@@ -17,10 +17,11 @@
 #
 CXX = g++
 
-TARGETS = glut_without_lib \
+TARGETS = glut_without_lib glut_with_lib
 
 
 CPPFLAGS = -std=c++11 -Wall -Wextra -Wno-unused-parameter
+LDFLAGS = -lfreeglut -lopengl32
 
 ifeq ($(OS),Windows_NT)
     CPPFLAGS += -DUNICODE
@@ -28,6 +29,10 @@ endif
 
 ifeq ($(shell uname),Darwin)
 	CPPFLAGS += -framework CoreServices
+endif
+
+ifeq ($(shell uname), Linux)
+	LDFLAGS = -lglut -lGL
 endif
 
 LDINCS = -I../../../src/cpp
@@ -50,8 +55,7 @@ libparamtuner.a:
 
 # targets
 glut_with_lib: libparamtuner.a glut_with_lib.o
-	$(CXX) $(CPPFLAGS) -o $@ glut_with_lib.o -lfreeglut -lopengl32 -lpthread -L. -lparamtuner
+	$(CXX) $(CPPFLAGS) -o $@ glut_with_lib.o $(LDFLAGS) -lparamtuner -lpthread -L. 
 
 glut_without_lib: glut_without_lib.o
-	$(CXX) $(CPPFLAGS) -o $@ glut_without_lib.o -L. -lfreeglut -lopengl32
-
+	$(CXX) $(CPPFLAGS) -o $@ glut_without_lib.o -L. $(LDFLAGS)
