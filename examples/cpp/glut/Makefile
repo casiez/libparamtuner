@@ -28,6 +28,7 @@ ifeq ($(OS),Windows_NT)
 endif
 
 ifeq ($(shell uname),Darwin)
+	LDFLAGS = -lglut -framework OpenGL
 	CPPFLAGS += -framework CoreServices
 endif
 
