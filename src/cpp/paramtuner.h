@@ -43,10 +43,12 @@ namespace ParamTuner {
 		listener of the previous call.
 		
 		\param path the relative or absolute path to the file to listen to
+
+		\param useUpdateFunc determine if parameters are updated using update() function
 		
 		\return -1 if a problem occurs when starting the listener, 0 otherwise.
 	*/
-	int load(const std::string &path);
+	int load(const std::string &path, bool useUpdateFunc=false);
 
 
 	/**
@@ -81,6 +83,16 @@ namespace ParamTuner {
 		file is modified.
 	*/
 	void bind(const std::string &name, void *ptr);
+
+	/**
+		\brief Update all parameters in an explicit way when useUpdateFunc=true
+
+		This function has no effect if useUpdateFunc=false
+
+		If useUpdateFunc=true, the function reads the xml file only if it has changed
+		and then updates all parameter values.
+	*/
+	void update();
 
 }
 #endif

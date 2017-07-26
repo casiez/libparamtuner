@@ -39,6 +39,9 @@ namespace ParamTuner {
 
 	FileSystemWatcher* watcher;
 
+	bool useUpdateFunction = false;
+	bool someParametersChanged = false;
+
 
 	// Private function
 	double stringToDouble(const string & str)
@@ -145,13 +148,17 @@ namespace ParamTuner {
 
 	void fileModificationCallback() 
     {
-		loadFile(true);
+    	if (useUpdateFunction)
+    		someParametersChanged = true;
+    	else
+			loadFile(true);
 	}
 
 
 	// Public function
-	int load(const string &path)
+	int load(const string &path, bool useUpdateFunc)
 	{
+		useUpdateFunction = useUpdateFunc;
 		binding.clear();
 		if (watcher)
 			delete watcher;
@@ -168,6 +175,18 @@ namespace ParamTuner {
 	{
 		binding[name] = ptr;
 		loadFile(false);
+	}
+
+	void update()
+	{
+		if (useUpdateFunction) {
+			if (someParametersChanged) {
+				loadFile(true);
+				someParametersChanged = false;
+			}
+		}
+		else
+			cerr << "libParamTuner update() call is useless unless useUpdateFunc parameter in load function is set to true"; 
 	}
 
 }
