@@ -50,7 +50,12 @@ boolean minMaxValid = p.getMax() != p.getMin();
 			Slider slider = new Slider(p.getMin(), p.getMax(), value);
 			slider.setShowTickMarks(false);
 			slider.setShowTickLabels(false);
-			spinner.getValueFactory().valueProperty().bindBidirectional(slider.valueProperty().asObject());
+			spinner.valueProperty().addListener((o, old, newValue) -> {
+				slider.setValue(newValue);
+			});
+			slider.valueProperty().addListener((o, old, newValue) -> {
+				spinner.getValueFactory().setValue((double)(Double)newValue);
+			});
 			add(slider);
 			HBox.setHgrow(slider, Priority.ALWAYS);
 		}
