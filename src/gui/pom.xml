@@ -60,7 +60,22 @@
 	          </archive>
 	        </configuration>
       </plugin>
-	      
+      <plugin>
+          <groupId>com.zenjava</groupId>
+          <artifactId>javafx-maven-plugin</artifactId>
+          <version>8.6.0</version>
+          <configuration>
+                <mainClass>fr.univ_lille1.libparamtuner.gui.Main</mainClass>
+                <identifier></identifier>
+                <vendor>Université Lille 1</vendor>
+                <verbose>true</verbose>
+                <bundleArguments>
+                    <signBundle>true</signBundle>
+                    <mac.signing-key-developer-id-app>UNIVERSITE SCIENCES TECHNOLOGIES LILLE</mac.signing-key-developer-id-app> 
+                </bundleArguments>
+          </configuration>
+          
+      </plugin>	      
     </plugins>
         
         

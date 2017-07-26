@@ -45,6 +45,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+import java.util.prefs.Preferences;
 
 public class MainFrame extends Application {
 	
@@ -65,7 +66,8 @@ public class MainFrame extends Application {
 	private boolean autosave = true;
 	
 	private SaveThread saveThread = new SaveThread();
-	
+
+	private Preferences prefs;
 	
 	
 	@Override
@@ -82,6 +84,8 @@ public class MainFrame extends Application {
 				event.consume();
 			}
 		});
+
+		prefs = Preferences.userRoot().node(this.getClass().getName());
 		
 		BorderPane globalPanel = new BorderPane();
 		
@@ -107,12 +111,13 @@ public class MainFrame extends Application {
 		Label lblNewLabel = new Label("XML File :");
 		topPanel.getChildren().add(lblNewLabel);
 		
-		textField = new TextField();
+		String lastPath = prefs.get("lastpath","");
+		textField = new TextField(lastPath);
 		topPanel.getChildren().add(textField);
 		textField.setPrefWidth(20);
 		HBox.setHgrow(textField, Priority.ALWAYS);
 		textField.setOnAction(e -> loadFile(textField.getText()));
-		
+
 		Button btnExplorer = new Button("...");
 		topPanel.getChildren().add(btnExplorer);
 		btnExplorer.setOnAction(e -> {
@@ -149,6 +154,8 @@ public class MainFrame extends Application {
 		
 		stage.show();
 		
+		if (lastPath != "")
+			loadFile(lastPath);
 	}
 	
 	
@@ -204,6 +211,7 @@ public class MainFrame extends Application {
 		
 		
 		ParameterFile pFile;
+		prefs.put("lastpath", path);
 		
 		
 		try {

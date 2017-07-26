@@ -1,6 +1,6 @@
 # libParamTuner
 
-Cross-platform library to ease the interactive tuning of parameters without the need to recompile code.
+Cross-platform library to ease the interactive tuning of parameters at run time and without the need to recompile code.
 
 ## Minimal example
 ```cpp
@@ -105,6 +105,8 @@ real-time without having to edit the settings file manually.
 The Java application use Maven. First, you have to compile the Java library
 (see instruction above). Then, in directory `src/gui`, run `mvn package`.
 The executable Jar is in subdirectory `target`.
+
+If you want to create an installer with an executable, run `mvn jfx:native`. Note that icns icons for macOS were created using the command `makeicns -in ParamTunerGUI.png -out ParamTunerGUI.icns`
 
 ### Usage
 
