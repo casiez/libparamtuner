@@ -25,6 +25,9 @@ int main() {
 	string varString;
 
 	ParamTuner::load("settings.xml");
+	// Use the line below if you want to explicitly update
+	// all parameters using update() function 
+	// ParamTuner::load("settings.xml", true);
 	ParamTuner::bind("setting1", &varDouble);
 	ParamTuner::bind("setting2", &varInt);
 	ParamTuner::bind("mybool", &varBool);
@@ -32,6 +35,8 @@ int main() {
 
 	while (true) {
 		SLEEP(500); // 500 ms
+		// Uncomment the line below if you use ParamTuner::load("settings.xml", true);
+		// ParamTuner::update();
 		cout << "setting1 (double) = " << varDouble
 			<< " ; setting2 (int) = " << varInt
 			<< " ; mybool (bool) = " << varBool
