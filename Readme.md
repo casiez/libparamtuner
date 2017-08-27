@@ -46,7 +46,17 @@ int main() {
 }
 ```
 
+The associated settings.xml file is as follows:
 
+```
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ParamList>
+	<mybool type="bool" value="true"/>
+	<mystring type="string" value="hello libParamTuner"/>
+	<setting1 type="double" min="0.0" max="100.0" value="0.3"/>
+	<setting2 type="int" min="0" max="50" value="5"/>
+</ParamList>
+```
 
 ## C++ Library
 

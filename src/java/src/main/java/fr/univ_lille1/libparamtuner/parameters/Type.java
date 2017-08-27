@@ -81,6 +81,14 @@ public enum Type {
 		return null;
 	}
 	
+	public static String getStrTypeFromParamInstance(Class<? extends Parameter> pC) {
+		for (Type t : values()) {
+			if (t.parameterClass.equals(pC))
+				return t.typeAttrValues[0];
+		}
+		return "";
+	}
+	
 	public static Type getTypeFromJavaType(Class<?> c) {
 		return javaTypeToType.get(c);
 	}

@@ -72,6 +72,28 @@ public abstract class Parameter {
 		}
 	}
 	
+	public String toXMLstring() {
+		String res = "<";
+		res += name + " type=\"";
+		
+		String type = Type.getStrTypeFromParamInstance(getClass());
+		res+= type + "\" ";
+		
+		if (min != 0 || max != 0) {
+			if (getClass() == IntegerParameter.class) {
+				res += "min=\"" + (int)min + "\" ";
+				res += "max=\"" + (int)max + "\" ";
+			} else {
+				res += "min=\"" + min + "\" ";
+				res += "max=\"" + max + "\" ";				
+			}
+		}
+		
+		res += "value=\"" + value + "\"/>";
+		
+		return res;
+	}
+	
 	
 	
 	/* package */ Parameter(Element xmlEl) {
@@ -96,12 +118,13 @@ public abstract class Parameter {
 	
 	/* package */ Element toXMLElement(Document doc) {
 		Element el = doc.createElement(name);
-		el.setAttribute("value", value);
 		el.setAttribute("type", getType().getTypeAttributesValues()[0]);
 		if (min != 0 || max != 0) {
 			el.setAttribute("min", Double.toString(min));
 			el.setAttribute("max", Double.toString(max));
 		}
+		el.setAttribute("value", value);
+		
 		return el;
 	}
 	
@@ -115,10 +138,6 @@ public abstract class Parameter {
 		
 		return type.parameterClass.getDeclaredConstructor(Element.class).newInstance(el);
 		
-	}
-	
-	
-	
-	
+	}	
 	
 }

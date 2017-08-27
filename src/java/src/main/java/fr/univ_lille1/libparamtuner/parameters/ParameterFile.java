@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -43,6 +44,7 @@ import org.w3c.dom.NodeList;
 public class ParameterFile {
 	
 	private final Map<String, Parameter> parameters = new TreeMap<>();
+	private final Vector<String> paramOrder = new Vector<String>(); 
 	
 	public final File file;
 	
@@ -83,10 +85,6 @@ public class ParameterFile {
 		}
 	}
 	
-	
-	
-	
-	
 	private Document createXMLDocument() throws ParserConfigurationException {
 		Document doc = getXMLBuilder().newDocument();
 		
@@ -101,19 +99,31 @@ public class ParameterFile {
 		return doc;
 	}
 	
-	
+	private String createXMLstring() {
+		String res = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
+		res += "<ParamList>\n";
+		
+		for (String s : paramOrder) {
+			res += "\t" + parameters.get(s).toXMLstring() + "\n";	
+		}
+		res += "</ParamList>\n";
+		
+		return res;
+	}
 	
 	public void save() throws Exception {
 		
 		// converting content ton XML String
-		Transformer tf = TransformerFactory.newInstance().newTransformer();
+		/*Transformer tf = TransformerFactory.newInstance().newTransformer();
 		tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		tf.setOutputProperty(OutputKeys.INDENT, "yes");
 		String content;
 		try (StringWriter swr = new StringWriter()) {
 			tf.transform(new DOMSource(createXMLDocument()), new StreamResult(swr));
 			content = swr.toString();
-		}
+		}*/
+		
+		String content = createXMLstring();
 		
 		// saving XML to file (multiple try if needed)
 		boolean ok = false;
@@ -170,6 +180,7 @@ public class ParameterFile {
 	
 	public void addParameter(Parameter s) {
 		parameters.put(s.name, s);
+		paramOrder.add(s.name);
 	}
 	
 	public Parameter getParameter(String name) {
@@ -181,7 +192,12 @@ public class ParameterFile {
 	}
 	
 	public List<Parameter> getAll() {
-		return new ArrayList<>(parameters.values());
+		ArrayList<Parameter> res = new ArrayList<Parameter>();
+		
+		for (String s : paramOrder) {
+			res.add(parameters.get(s));
+		}
+		return res;
 	}
 	
 	
