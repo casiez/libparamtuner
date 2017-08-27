@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<ParamList>
+	<fontsize type="int" min="5" max="50" value="35"/>
+	<s type="string" value="Hello libParamTuner"/>
+	<x type="int" min="0" max="800" value="236"/>
+	<y type="int" min="0" max="600" value="290"/>
+	<angle type="double" min="0.0" max="360.0" value="0.0"/>
+	<toggle type="bool" value="false"/>
+</ParamList>
