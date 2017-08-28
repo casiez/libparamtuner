@@ -185,8 +185,13 @@ namespace ParamTuner {
 				someParametersChanged = false;
 			}
 		}
-		else
-			cerr << "libParamTuner update() call is useless unless useUpdateFunc parameter in load function is set to true"; 
+		else {
+			static bool once = true;
+			if (once) {
+				cerr << "libParamTuner update() call is useless unless useUpdateFunc parameter in load function is set to true" << std::endl;
+				once = false;
+			} 
+		}
 	}
 
 }

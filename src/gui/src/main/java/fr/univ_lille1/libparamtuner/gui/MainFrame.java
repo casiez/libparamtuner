@@ -173,7 +173,7 @@ public class MainFrame extends Application {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("About");
 			alert.setHeaderText(null);
-			alert.setContentText("ParamTunerGUI version 1.0\n\nParamTunerGUI is part of libParamTuner\nGet more information on https://github.com/casiez/libparamtuner");
+			alert.setContentText("ParamTunerGUI version 1.1\n\nParamTunerGUI is part of libParamTuner\nGet more information on https://github.com/casiez/libparamtuner");
 			
 			alert.showAndWait();
 		});
@@ -213,8 +213,7 @@ public class MainFrame extends Application {
 		
 		saveThread.start();
 		
-		if (filepath != "")
-			loadFile(filepath);
+		loadFile(filepath);
 		
 		stage.show();
 	}
@@ -260,7 +259,7 @@ public class MainFrame extends Application {
 	private boolean confirmSaveBeforeClosingFile() {
 		if (saved)
 			return true;
-		String ret = FXDialogUtils.showConfirmDialog("Save current file ?", null, "Do you want to save the current file ?",
+		String ret = FXDialogUtils.showConfirmDialog("Save current file ?", null, "Do you want to save the current file?",
 				"Yes", "No", "Cancel");
 		if (ret == null || ret.equals("Cancel"))
 			return false;
@@ -272,7 +271,7 @@ public class MainFrame extends Application {
 	public void loadFile(String path) {
 		
 		if (path.trim().isEmpty()) {
-			String value = FXDialogUtils.showConfirmDialog("Error", null, "Path not specified. Do you want to explore ?", "Yes", "No");
+			String value = FXDialogUtils.showConfirmDialog("Error", null, "Path not specified. Do you want to open?", "Yes", "No");
 			if ("Yes".equals(value)) {
 				File f = fileChooser.showOpenDialog(stage);
 				if (f != null)
@@ -306,7 +305,7 @@ public class MainFrame extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 			clearConfigEntries();
-			String value = FXDialogUtils.showConfirmDialog("Unable to load the file", "Path: " + path, e.getMessage()+"\n\nDo you want to explore for an other file ?", "Yes", "No");
+			String value = FXDialogUtils.showConfirmDialog("Unable to load the file", "Path: " + path, e.getMessage()+"\n\nDo you want to open another file?", "Yes", "No");
 			if ("Yes".equals(value)) {
 				File f = fileChooser.showOpenDialog(stage);
 				if (f != null)
