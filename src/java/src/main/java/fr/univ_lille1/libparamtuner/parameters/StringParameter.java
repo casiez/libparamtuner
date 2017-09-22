@@ -17,17 +17,45 @@
  */
 package fr.univ_lille1.libparamtuner.parameters;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 public class StringParameter extends Parameter {
 	
-	public StringParameter(String n, String v) {
+	private List<String> values = new ArrayList<>();
+	
+	public StringParameter(String n, String v, String... possibleValues) {
 		super(n);
 		setValue(v);
+		
+		for (String pV : possibleValues) {
+			if (pV != null)
+				values.add(pV);
+		}
+		
 	}
 	
 	/* package */ StringParameter(Element el) {
 		super(el);
+		
+		NodeList valueNodes = el.getChildNodes();
+		for (int i = 0; i < valueNodes.getLength(); i++) {
+			Node n = valueNodes.item(i);
+			if (n.getNodeType() != Node.ELEMENT_NODE)
+				continue;
+			Element valueEl = (Element) n;
+			if (!valueEl.getTagName().equalsIgnoreCase("value"))
+				continue;
+			String v = valueEl.getTextContent();
+			if (v != null)
+				values.add(v);
+		}
+		
 	}
 	
 	public void setValue(String v) {
@@ -38,6 +66,11 @@ public class StringParameter extends Parameter {
 	
 	public String getValue() {
 		return value;
+	}
+	
+	
+	public List<String> getPossibleValues() {
+		return Collections.unmodifiableList(values);
 	}
 	
 	

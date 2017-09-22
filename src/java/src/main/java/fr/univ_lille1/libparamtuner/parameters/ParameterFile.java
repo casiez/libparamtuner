@@ -91,8 +91,8 @@ public class ParameterFile {
 		Element parentEl = doc.createElement("ParamList");
 		doc.appendChild(parentEl);
 		
-		for (Parameter s : parameters.values()) {
-			parentEl.appendChild(s.toXMLElement(doc));
+		for (String s : paramOrder) {
+			parentEl.appendChild(parameters.get(s).toXMLElement(doc));
 		}
 		
 		
@@ -113,17 +113,24 @@ public class ParameterFile {
 	
 	public void save() throws Exception {
 		
-		// converting content ton XML String
-		/*Transformer tf = TransformerFactory.newInstance().newTransformer();
+		// converting content to XML String
+		Transformer tf = TransformerFactory.newInstance().newTransformer();
 		tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		tf.setOutputProperty(OutputKeys.INDENT, "yes");
-		String content;
+		tf.setOutputProperty(OutputKeys.STANDALONE, "no");
+		tf.setOutputProperty(OutputKeys.VERSION, "1.0");
+		tf.setOutputProperty(OutputKeys.METHOD, "xml");
+		System.out.println(tf.getOutputProperties().keySet());
+		String content2;
 		try (StringWriter swr = new StringWriter()) {
 			tf.transform(new DOMSource(createXMLDocument()), new StreamResult(swr));
-			content = swr.toString();
-		}*/
+			content2 = swr.toString();
+		}
 		
 		String content = createXMLstring();
+		
+		System.out.println(content);
+		System.out.println(content2);
 		
 		// saving XML to file (multiple try if needed)
 		boolean ok = false;
