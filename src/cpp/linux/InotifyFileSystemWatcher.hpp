@@ -37,6 +37,7 @@ protected:
 	int inotifyFileDesc;
 	int inotifyListenerDesc;
 	std::thread watcherThread;
+	bool end = false;
 
 	virtual void update() {
 		inotify_rm_watch(inotifyFileDesc, inotifyListenerDesc);
@@ -51,7 +52,7 @@ protected:
 		}
 		int length;
 		char buffer[EVENT_BUF_LEN];
-		while ((length = read(inotifyFileDesc, buffer, EVENT_BUF_LEN))) {
+		while ((length = read(inotifyFileDesc, buffer, EVENT_BUF_LEN)) > 0 && !end) {
 			int i = 0;
 			while (i < length) {
 				struct inotify_event *event = (struct inotify_event *) &buffer[i];
@@ -72,8 +73,10 @@ public:
 	}
 	
 	virtual ~InotifyFileSystemWatcher() {
+		end = true;
 		inotify_rm_watch(inotifyFileDesc, inotifyListenerDesc);
 		close(inotifyFileDesc);
+		watcherThread.join(); // thread should terminate normally when all descriptors are closed
 	}
 
 	

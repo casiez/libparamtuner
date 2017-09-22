@@ -163,7 +163,13 @@ public class MainFrame extends Application {
 		MenuItem btnRevert = new MenuItem("Revert file");
 		KeyCombination krrevert = new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN);
 		btnRevert.setAccelerator(krrevert);		
-		btnRevert.setOnAction(e -> loadFile(filepath));
+		btnRevert.setOnAction(e -> {
+			/* manually set 'saved' to true to avoid dialog that ask for saving while
+			 * we wan't to revert file (useless to revert just after saving)
+			 */
+			saved = true;
+			loadFile(filepath);
+		});
 		
 		menu1.getItems().addAll(open, smi, btnSave, chckbxAutosave, smi2, btnRevert);
 		
