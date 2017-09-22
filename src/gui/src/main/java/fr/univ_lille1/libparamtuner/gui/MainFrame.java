@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.Preferences;
 
@@ -366,6 +365,7 @@ public class MainFrame extends Application {
 		
 		private AtomicBoolean wantToSave = new AtomicBoolean(false);
 		
+		@Override
 		public void run() {
 			try {
 				for(;;) {

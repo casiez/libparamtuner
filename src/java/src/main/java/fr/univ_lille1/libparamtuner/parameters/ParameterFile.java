@@ -44,7 +44,7 @@ import org.w3c.dom.NodeList;
 public class ParameterFile {
 	
 	private final Map<String, Parameter> parameters = new TreeMap<>();
-	private final Vector<String> paramOrder = new Vector<String>(); 
+	private final Vector<String> paramOrder = new Vector<>(); 
 	
 	public final File file;
 	
@@ -202,7 +202,7 @@ public class ParameterFile {
 	}
 	
 	public List<Parameter> getAll() {
-		ArrayList<Parameter> res = new ArrayList<Parameter>();
+		ArrayList<Parameter> res = new ArrayList<>();
 		
 		for (String s : paramOrder) {
 			res.add(parameters.get(s));
