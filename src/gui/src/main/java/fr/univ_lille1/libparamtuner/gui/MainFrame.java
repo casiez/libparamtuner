@@ -107,13 +107,16 @@ public class MainFrame extends Application {
 		BorderPane globalPanel = new BorderPane();
 		globalPanel.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(3))));
 		
-		double windowWidth = prefs.getDouble(getCode(filepath) + "width", 50);
+		double windowWidth = prefs.getDouble(getCode(filepath) + "width", 300);
 		double windowHeight = prefs.getDouble(getCode(filepath) + "height", 300);
 		
 		scene = new Scene(globalPanel, windowWidth, windowHeight);
 		stage.setScene(scene);
 		stage.sizeToScene();
-		stage.centerOnScreen();	
+		stage.centerOnScreen();
+		
+		stage.setMinWidth(250);
+		stage.setMinHeight(250);
 
 		
 		MenuBar menuBar = new MenuBar();
@@ -126,7 +129,7 @@ public class MainFrame extends Application {
 		
 		// Open...
 		MenuItem open = new MenuItem("Open...");
-		KeyCombination kropen = new KeyCodeCombination(KeyCode.O, KeyCombination.META_DOWN);
+		KeyCombination kropen = new KeyCodeCombination(KeyCode.O, KeyCombination.SHORTCUT_DOWN);
 		open.setAccelerator(kropen);
 		open.setOnAction(e -> {
 			File f = fileChooser.showOpenDialog(stage);
@@ -145,7 +148,7 @@ public class MainFrame extends Application {
 		
 		// Save
 		btnSave = new MenuItem("Save");
-		KeyCombination krsave = new KeyCodeCombination(KeyCode.S, KeyCombination.META_DOWN);
+		KeyCombination krsave = new KeyCodeCombination(KeyCode.S, KeyCombination.SHORTCUT_DOWN);
 		btnSave.setAccelerator(krsave);		
 		btnSave.setOnAction(e -> saveFile());
 		btnSave.setDisable(true);
@@ -158,7 +161,7 @@ public class MainFrame extends Application {
 		
 		// Revert file
 		MenuItem btnRevert = new MenuItem("Revert file");
-		KeyCombination krrevert = new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN);
+		KeyCombination krrevert = new KeyCodeCombination(KeyCode.R, KeyCombination.SHORTCUT_DOWN);
 		btnRevert.setAccelerator(krrevert);		
 		btnRevert.setOnAction(e -> loadFile(filepath));
 		
