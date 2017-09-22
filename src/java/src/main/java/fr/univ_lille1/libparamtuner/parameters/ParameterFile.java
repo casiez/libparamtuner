@@ -41,6 +41,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
+
 public class ParameterFile {
 	
 	private final Map<String, Parameter> parameters = new TreeMap<>();
@@ -117,9 +119,8 @@ public class ParameterFile {
 		Transformer tf = TransformerFactory.newInstance().newTransformer();
 		tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		tf.setOutputProperty(OutputKeys.INDENT, "yes");
-		tf.setOutputProperty(OutputKeys.STANDALONE, "no");
+		tf.setOutputProperty(OutputPropertiesFactory.S_BUILTIN_OLD_EXTENSIONS_UNIVERSAL +"indent-amount", "4");
 		tf.setOutputProperty(OutputKeys.VERSION, "1.0");
-		tf.setOutputProperty(OutputKeys.METHOD, "xml");
 		System.out.println(tf.getOutputProperties().keySet());
 		String content2;
 		try (StringWriter swr = new StringWriter()) {
