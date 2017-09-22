@@ -29,6 +29,7 @@ import fr.univ_lille1.libparamtuner.gui.parameters_panel.ParameterPanel;
 import fr.univ_lille1.libparamtuner.parameters.Parameter;
 import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -374,7 +375,7 @@ public class MainFrame extends Application {
 					try {
 						loadedFile.save();
 					} catch (Exception e) {
-						FXDialogUtils.showExceptionDialog("Unable to save the file", "Path: " + loadedFile.file, e);
+						Platform.runLater(() -> FXDialogUtils.showExceptionDialog("Unable to save the file", "Path: " + loadedFile.file, e));
 						return;
 					}
 					

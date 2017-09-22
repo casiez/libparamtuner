@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -71,6 +72,19 @@ public class StringParameter extends Parameter {
 	
 	public List<String> getPossibleValues() {
 		return Collections.unmodifiableList(values);
+	}
+	
+	
+	
+	@Override
+	/* package */ Element toXMLElement(Document doc) {
+		Element el = super.toXMLElement(doc);
+		for (String value : values) {
+			Element valueEl = doc.createElement("value");
+			valueEl.appendChild(doc.createTextNode(value));
+			el.appendChild(valueEl);
+		}
+		return el;
 	}
 	
 	

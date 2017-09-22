@@ -72,28 +72,6 @@ public abstract class Parameter {
 		}
 	}
 	
-	public String toXMLstring() {
-		String res = "<";
-		res += name + " type=\"";
-		
-		String type = Type.getStrTypeFromParamInstance(getClass());
-		res+= type + "\" ";
-		
-		if (min != 0 || max != 0) {
-			if (getClass() == IntegerParameter.class) {
-				res += "min=\"" + (int)min + "\" ";
-				res += "max=\"" + (int)max + "\" ";
-			} else {
-				res += "min=\"" + min + "\" ";
-				res += "max=\"" + max + "\" ";				
-			}
-		}
-		
-		res += "value=\"" + value + "\"/>";
-		
-		return res;
-	}
-	
 	
 	
 	/* package */ Parameter(Element xmlEl) {
@@ -120,13 +98,49 @@ public abstract class Parameter {
 		Element el = doc.createElement(name);
 		el.setAttribute("type", getType().getTypeAttributesValues()[0]);
 		if (min != 0 || max != 0) {
-			el.setAttribute("min", Double.toString(min));
-			el.setAttribute("max", Double.toString(max));
+			boolean isInteger = getClass() == IntegerParameter.class;
+			el.setAttribute("min", isInteger ? ""+(int)min : ""+min);
+			el.setAttribute("max", isInteger ? ""+(int)max : ""+max);
 		}
 		el.setAttribute("value", value);
 		
 		return el;
 	}
+	
+	
+
+	
+	/**
+	 * @deprecated Prefer using {@link #toXMLElement(Document)} because it is more flexible
+	 * and allow more clean code when overriding. For the current method, overriding it
+	 * requires to reimplement the code to add specific functionnality related to the subclass
+	 */
+	@Deprecated
+	/* package */ String toXMLstring() {
+		String res = "<";
+		res += name + " type=\"";
+		
+		String type = Type.getStrTypeFromParamInstance(getClass());
+		res+= type + "\" ";
+		
+		if (min != 0 || max != 0) {
+			if (getClass() == IntegerParameter.class) {
+				res += "min=\"" + (int)min + "\" ";
+				res += "max=\"" + (int)max + "\" ";
+			} else {
+				res += "min=\"" + min + "\" ";
+				res += "max=\"" + max + "\" ";
+			}
+		}
+		
+		res += "value=\"" + value + "\"/>";
+		
+		return res;
+	}
+	
+	
+	
+	
 	
 	
 	

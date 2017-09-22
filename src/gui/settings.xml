@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <ParamList>
-<mybool type="bool" value="false"/>
-<mystring type="string" value=""/>
-<setting1 max="1000.0" min="0.0" type="double" value="0.0"/>
-<setting2 max="10.0" min="0.0" type="int" value="0"/>
+    <mybool type="bool" value="false"/>
+    <setting2 max="10" min="0" type="int" value="3"/>
+    <color type="string" value="BLACK">
+        <value>BLACK</value>
+        <value>WHITE</value>
+        <value>RED</value>
+    </color>
+    <setting1 max="1000.0" min="0.0" type="double" value="588.2352941176471"/>
 </ParamList>

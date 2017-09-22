@@ -41,8 +41,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.sun.org.apache.xml.internal.serializer.OutputPropertiesFactory;
-
 public class ParameterFile {
 	
 	private final Map<String, Parameter> parameters = new TreeMap<>();
@@ -100,8 +98,14 @@ public class ParameterFile {
 		
 		return doc;
 	}
-	
-	private String createXMLstring() {
+
+	/**
+	 * @deprecated Prefer using {@link #createXMLDocument()} because it is more flexible
+	 * and allow more clean code when overriding. For the current method, overriding it
+	 * requires to reimplement the code to add specific functionnality related to the subclass
+	 */
+	@Deprecated
+	protected String createXMLstring() {
 		String res = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n";
 		res += "<ParamList>\n";
 		
@@ -119,19 +123,17 @@ public class ParameterFile {
 		Transformer tf = TransformerFactory.newInstance().newTransformer();
 		tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 		tf.setOutputProperty(OutputKeys.INDENT, "yes");
-		tf.setOutputProperty(OutputPropertiesFactory.S_BUILTIN_OLD_EXTENSIONS_UNIVERSAL +"indent-amount", "4");
-		tf.setOutputProperty(OutputKeys.VERSION, "1.0");
-		System.out.println(tf.getOutputProperties().keySet());
-		String content2;
+		
+		// the propery used below depend of the implementation of the Transformer
+		// xslt and xalan are used in Oracle implementation of Java
+		tf.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+		tf.setOutputProperty("{http://xml.apache.org/xalan}indent-amount", "4");
+		
+		String content;
 		try (StringWriter swr = new StringWriter()) {
 			tf.transform(new DOMSource(createXMLDocument()), new StreamResult(swr));
-			content2 = swr.toString();
+			content = swr.toString();
 		}
-		
-		String content = createXMLstring();
-		
-		System.out.println(content);
-		System.out.println(content2);
 		
 		// saving XML to file (multiple try if needed)
 		boolean ok = false;
