@@ -77,7 +77,7 @@ class FileWatcher extends Thread {
 	 * @return the modifier if it exist in the current Java implementation,
 	 * 		or null otherwise.
 	 */
-	private Modifier getHIGHSensitivityModifier() {
+	private static Modifier getHIGHSensitivityModifier() {
 		try {
 			/*
 			 * Java Sun implementation

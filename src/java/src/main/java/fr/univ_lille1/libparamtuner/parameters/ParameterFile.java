@@ -61,7 +61,7 @@ public class ParameterFile {
 	}
 	
 	
-	private DocumentBuilder getXMLBuilder() throws ParserConfigurationException {
+	private static DocumentBuilder getXMLBuilder() throws ParserConfigurationException {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		factory.setIgnoringComments(true);
 		return factory.newDocumentBuilder();

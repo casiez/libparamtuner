@@ -221,7 +221,7 @@ public class MainFrame extends Application {
 		stage.show();
 	}
 	
-	private String getCode(String filepath) {
+	private static String getCode(String filepath) {
 		String res = "";
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
