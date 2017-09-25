@@ -133,6 +133,9 @@ public class ParamTuner {
 	 */
 	private static FileWatcher fileWatcherInstance;
 	
+	private static boolean useUpdateFunction = false;
+	private static boolean someParametersChanged = true;
+	
 	private static Map<String, Bind<?>> binding = Collections.synchronizedMap(new HashMap<>());
 	
 	private static class Bind<T> {
@@ -191,23 +194,78 @@ public class ParamTuner {
 	}
 	
 	
+	
+	/**
+	 * @param fw the fileWatcher that call this method
+	 */
+	private static void fileModificationCallback(FileWatcher fw) {
+		if (useUpdateFunction)
+    		someParametersChanged = true;
+    	else
+			loadFile();
+	}
+	
+	
 	/*
 	 * Public static methods (public API)
 	 */
+	
+	
+	
+	
+	
+	
+
+	/**
+	 * Start listening modifications of the specified file. <br>
+	 * 
+	 * Calling this method is equivalent to :
+	 * 
+	 * <pre>ParamTuner.load(new File(configFile), false);</pre>
+	 * 
+	 * @param configFile The absolute or relative path to the file.
+	 * 
+	 * @see #load(File, boolean)
+	 */
+	public static void load(String configFile) {
+		load(new File(configFile), false);
+	}
+	
+	
+	
+
+	/**
+	 * Start listening modifications of the specified file. <br>
+	 * 
+	 * Calling this method is equivalent to :
+	 * 
+	 * <pre>ParamTuner.load(configFile, false);</pre>
+	 * 
+	@param configFile the {@link File} to listen to
+	 * 
+	 * @see #load(File, boolean)
+	 */
+	public static void load(File configFile) {
+		load(configFile, false);
+	}
+	
+	
+	
 	
 	/**
 	 * Start listening modifications of the specified file. <br>
 	 * 
 	 * Calling this method is equivalent to :
 	 * 
-	 * <pre>ParamTuner.load(new File(configFile));</pre>
+	 * <pre>ParamTuner.load(new File(configFile), manualUpdate);</pre>
 	 * 
 	 * @param configFile The absolute or relative path to the file.
+	 * @param manualUpdate determine if parameters are updated using update() function
 	 * 
-	 * @see #load(File)
+	 * @see #load(File, boolean)
 	 */
-	public static void load(String configFile) {
-		load(new File(configFile));
+	public static void load(String configFile, boolean manualUpdate) {
+		load(new File(configFile), manualUpdate);
 	}
 	
 	
@@ -232,15 +290,18 @@ public class ParamTuner {
 	listener of the previous call.
 	
 	@param configFile the {@link File} to listen to
+	@param manualUpdate determine if parameters are updated using update() function
 	
 	 */
-	public static synchronized void load(File configFile) {
+	public static synchronized void load(File configFile, boolean manualUpdate) {
 		if (fileWatcherInstance != null) {
 			fileWatcherInstance.interrupt();
 		}
 		
+		useUpdateFunction = manualUpdate;
+		
 		try {
-			fileWatcherInstance = new FileWatcher(configFile, fw -> loadFile());
+			fileWatcherInstance = new FileWatcher(configFile, ParamTuner::fileModificationCallback);
 		} catch (Exception e) {
 			printError("Can't start Watcher thread because of Exception:");
 			e.printStackTrace();
@@ -273,7 +334,7 @@ public class ParamTuner {
 		@param setter a {@link Consumer} that take the new value as parameter
 				and should apply this new value to the variable.
 	*/
-	public static <T> void bind(String parameterName, Class<T> javaType, Consumer<T> setter) {
+	public synchronized static <T> void bind(String parameterName, Class<T> javaType, Consumer<T> setter) {
 		if (javaType.isPrimitive()) {
 			throw new IllegalArgumentException(
 					"Please specify wrapper Class object instead of primitive Class object, on parameter 'javaType'");
@@ -286,9 +347,26 @@ public class ParamTuner {
 	}
 	
 	
-	public static void unbind(String parameterName) {
+	public synchronized static void unbind(String parameterName) {
 		binding.remove(parameterName);
 	}
 	
+	
+	
+	private static boolean once = true;
+	public synchronized static void update() {
+		if (useUpdateFunction) {
+			if (someParametersChanged) {
+				loadFile();
+				someParametersChanged = false;
+			}
+		}
+		else {
+			if (once) {
+				printError("libParamTuner update() call is useless unless manualUpdate parameter in load method is set to true");
+				once = false;
+			} 
+		}
+	}
 	
 }

@@ -35,13 +35,15 @@ public class Square extends Application {
     @Override
 	public void start(Stage stage) {
 		// Load settings file 
-		ParamTuner.load("settings.xml");
+		ParamTuner.load("settings.xml", true);
 
 		ParamTuner.bind("x", Integer.class, v -> x = v);
 		ParamTuner.bind("y", Integer.class, v -> y = v);
 		ParamTuner.bind("width", Integer.class, v -> width = v);
 		ParamTuner.bind("height", Integer.class, v -> height = v);
 		ParamTuner.bind("message", String.class, v -> message = v);
+		
+		ParamTuner.update();
     	
 	    VBox root = new VBox();
 	    canvas = new Canvas(600, 400);
@@ -67,6 +69,7 @@ public class Square extends Application {
     }
 
 	public void update() {
+		ParamTuner.update();
 		gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 		gc.setFill(Color.RED);
 	    gc.fillRect(x, y, width, height);

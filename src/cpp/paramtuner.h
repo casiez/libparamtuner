@@ -44,11 +44,11 @@ namespace ParamTuner {
 		
 		\param path the relative or absolute path to the file to listen to
 
-		\param useUpdateFunc determine if parameters are updated using update() function
+		\param manualUpdate determine if parameters are updated using update() function
 		
 		\return -1 if a problem occurs when starting the listener, 0 otherwise.
 	*/
-	int load(const std::string &path, bool useUpdateFunc=false);
+	int load(const std::string &path, bool manualUpdate=false);
 
 
 	/**
@@ -83,6 +83,13 @@ namespace ParamTuner {
 		file is modified.
 	*/
 	void bind(const std::string &name, void *ptr);
+	
+	/**
+		\brief Remove a binded variable
+		
+		\param name the parameter name
+	 */
+	void unbind(const std::string &name);
 
 	/**
 		\brief Update all parameters in an explicit way when useUpdateFunc=true

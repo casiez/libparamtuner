@@ -156,9 +156,9 @@ namespace ParamTuner {
 
 
 	// Public function
-	int load(const string &path, bool useUpdateFunc)
+	int load(const string &path, bool manualUpdate)
 	{
-		useUpdateFunction = useUpdateFunc;
+		useUpdateFunction = manualUpdate;
 		binding.clear();
 		if (watcher)
 			delete watcher;
@@ -176,6 +176,11 @@ namespace ParamTuner {
 		binding[name] = ptr;
 		loadFile(false);
 	}
+	
+	void unbind(const string &name)
+	{
+		binding.erase(name);
+	}
 
 	void update()
 	{
@@ -188,7 +193,7 @@ namespace ParamTuner {
 		else {
 			static bool once = true;
 			if (once) {
-				cerr << "libParamTuner update() call is useless unless useUpdateFunc parameter in load function is set to true" << std::endl;
+				cerr << "libParamTuner update() call is useless unless manualUpdate parameter in load function is set to true" << std::endl;
 				once = false;
 			} 
 		}
