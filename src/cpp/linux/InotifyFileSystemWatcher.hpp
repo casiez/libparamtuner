@@ -76,7 +76,7 @@ public:
 		end = true;
 		inotify_rm_watch(inotifyFileDesc, inotifyListenerDesc);
 		close(inotifyFileDesc);
-		watcherThread.join(); // thread should terminate normally when all descriptors are closed
+		watcherThread.join();
 	}
 
 	
