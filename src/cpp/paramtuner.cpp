@@ -40,7 +40,7 @@ namespace ParamTuner {
 	FileSystemWatcher* watcher;
 
 	bool useUpdateFunction = false;
-	bool someParametersChanged = false;
+	bool someParametersChanged = true;
 
 
 	// Private function
