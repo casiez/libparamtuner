@@ -115,6 +115,9 @@ To get the javadoc, run `mvn javadoc:javadoc` , then go to the subdirectory
 This Java (Swing) interface allow developers to change value in
 real-time without having to edit the settings file manually.
 
+### Available binaries
+See the [releases](releases/) section to directly download a binary version.
+
 ### Compilation
 
 The Java application use Maven. First, you have to compile the Java library
@@ -132,3 +135,8 @@ or
     java -jar ParamTunerGUI.jar
 
 then you can put the path to the XML directly into the GUI.
+
+## More information
+
+libParamTuner has been presented as a demo during the [IHM'17 conference](http://ihm17.afihm.org/).
+More information (in French) available on [HAL](https://hal.archives-ouvertes.fr/hal-01577686).

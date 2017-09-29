@@ -1,0 +1,21 @@
+#!/bin/bash
+
+DEST=libparamtuner-1.1
+DEST2=homebrew/$DEST
+
+rm -rf $DEST
+mkdir $DEST
+mkdir $DEST/lib
+mkdir $DEST/test
+cd ..
+cp COPYING LICENSE $DEST2/
+cp src/cpp/FileSystemWatcher.cpp $DEST2/
+cp src/cpp/FileSystemWatcher.hpp $DEST2/
+cp src/cpp/paramtuner.cpp $DEST2/
+cp src/cpp/paramtuner.h $DEST2/
+cp -r src/cpp/rapidxml-1.13 $DEST2/
+cp -r src/cpp/osx $DEST2/
+cd homebrew
+cp Makefile $DEST/
+cp settings.xml $DEST/test/
+cp simpletest.cpp $DEST/test/
