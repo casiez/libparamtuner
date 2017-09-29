@@ -116,7 +116,7 @@ This Java (Swing) interface allow developers to change value in
 real-time without having to edit the settings file manually.
 
 ### Available binaries
-See the [releases](releases/) section to directly download a binary version.
+See the [releases](https://github.com/casiez/libparamtuner/releases) section to directly download a binary version.
 
 ### Compilation
 
