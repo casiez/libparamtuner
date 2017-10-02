@@ -22,6 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
 import fr.univ_lille1.libparamtuner.gui.parameters_panel.ParameterPanel;
@@ -44,6 +45,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
@@ -84,10 +86,16 @@ public class MainFrame extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
 		stage.setTitle("ParamTuner GUI");
+		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("icon.png")));
 		
 		stage.setOnCloseRequest((event) -> {
 			if (confirmSaveBeforeClosingFile()) {
 				stage.hide();
+				try {
+					prefs.sync();
+				} catch (BackingStoreException e1) {
+					e1.printStackTrace();
+				}
 				System.exit(0);
 			}
 			else {
