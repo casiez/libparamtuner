@@ -8,5 +8,5 @@
         <value>RED</value>
     </color>
     <stringParam type="string" value="it's a string value"/>
-    <setting1 max="1000.0" min="0.0" type="double" value="593.24"/>
+    <setting1 desc="It's a description" max="1000.0" min="0.0" type="double" value="574.7"/>
 </ParamList>

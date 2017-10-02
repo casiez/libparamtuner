@@ -53,6 +53,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
@@ -334,7 +335,7 @@ public class MainFrame extends Application {
 	}
 	
 	private void clearConfigEntries() {
-		contentPanel.getChildren().forEach(entry -> ((Label)((ParameterPanel)entry).getChildren().get(0)).minWidthProperty().unbind());
+		contentPanel.getChildren().forEach(entry -> ((Label)((HBox)((ParameterPanel)entry).getCenter()).getChildren().get(0)).minWidthProperty().unbind());
 		contentPanel.getChildren().clear();
 		minLabelSize.setValue(0);
 	}

@@ -26,6 +26,7 @@ public abstract class Parameter {
 	protected String value;
 	protected double min;
 	protected double max;
+	protected String desc = null;
 	
 	protected Parameter(String n, String v, double m, double M) {
 		name = n;
@@ -72,6 +73,16 @@ public abstract class Parameter {
 		}
 	}
 	
+	public void setDesc(String d) {
+		if (d == null)
+			d = "";
+		desc = d;
+	}
+	
+	public String getDesc() {
+		return desc;
+	}
+	
 	
 	
 	/* package */ Parameter(Element xmlEl) {
@@ -91,6 +102,8 @@ public abstract class Parameter {
 			M = 0;
 		}
 		setMinMax(m, M);
+		
+		setDesc(xmlEl.getAttribute("desc"));
 	}
 	
 	
@@ -103,7 +116,8 @@ public abstract class Parameter {
 			el.setAttribute("max", isInteger ? ""+(int)max : ""+max);
 		}
 		el.setAttribute("value", value);
-		
+		if (!desc.isEmpty())
+			el.setAttribute("desc", desc);
 		return el;
 	}
 	

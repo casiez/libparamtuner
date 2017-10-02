@@ -30,26 +30,31 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.Text;
 
-public abstract class ParameterPanel extends HBox {
+public abstract class ParameterPanel extends BorderPane {
 	
 	protected final MainFrame frame;
 	protected final Parameter parameter;
+	protected final HBox panel;
 	
 	public ParameterPanel(MainFrame f, int index, Parameter p) {
-		super(3);
 		frame = f;
 		parameter = p;
 		
-		
+		panel = new HBox(3);
+		setCenter(panel);
 		
 		setBackground(new Background(new BackgroundFill((index % 2 == 0) ? Color.rgb(220, 220, 220) : Color.TRANSPARENT, null, null)));
 		setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(2))));
-		setAlignment(Pos.CENTER_LEFT);
+		panel.setAlignment(Pos.CENTER_LEFT);
 		
 		Label l = new Label(p.name);
 		l.setTooltip(new Tooltip(p.name + " of type " + p.getType().name()));
@@ -71,12 +76,21 @@ public abstract class ParameterPanel extends HBox {
 		add(l);
 		
 		
+		if (!p.getDesc().isEmpty()) {
+			Label descL = new Label(p.getDesc());
+			descL.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(2, 10, 0, 10))));
+			descL.setWrapText(true);
+			descL.setFont(Font.font(Font.getDefault().getFamily(), FontPosture.ITALIC, Font.getDefault().getSize()));
+			setBottom(descL);
+		}
+		
+		
 	}
 	
 	
 	
 	protected void add(Node e) {
-		getChildren().add(e);
+		panel.getChildren().add(e);
 	}
 	
 	
