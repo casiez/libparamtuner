@@ -26,10 +26,11 @@ import javafx.scene.layout.Priority;
 
 public class FloatParameterPanel extends ParameterPanel {
 	
+	
 	public FloatParameterPanel(MainFrame f, int index, FloatParameter p) {
 		super(f, index, p);
 		
-boolean minMaxValid = p.getMax() != p.getMin();
+		boolean minMaxValid = p.getMax() != p.getMin();
 		
 		double value = !minMaxValid ? p.getValue()
 				: (p.getValue() < p.getMin()) ? ((long) p.getMin())
@@ -39,6 +40,20 @@ boolean minMaxValid = p.getMax() != p.getMin();
 				minMaxValid ? p.getMin() : Long.MIN_VALUE,
 				minMaxValid ? p.getMax() : Long.MAX_VALUE, value);
 		spinner.setEditable(true);
+		
+		// pressing ENTER after editing the spinner value is no more required
+		// Here is how the value is automatically updated every time the editor's value change :
+		spinner.getEditor().textProperty().addListener((o, old, newValue) -> {
+			Double newV = null;
+			try {
+				newV = spinner.getValueFactory().getConverter().fromString(newValue);
+			} catch (Exception e) {
+				// ignore
+			}
+			if (newV != null) {
+				spinner.getValueFactory().setValue(newV);
+			}
+		});
 		spinner.valueProperty().addListener((o, old, newValue) -> {
 			p.setValue(newValue);
 			notifyContentModification();

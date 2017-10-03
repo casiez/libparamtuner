@@ -32,8 +32,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -49,13 +47,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -73,8 +67,7 @@ public class MainFrame extends Application {
 
 	public DoubleProperty minLabelSize = new SimpleDoubleProperty(0); // TODO private
 	
-	private String filepath = "";
-	private String currentFileName = "";
+	private File file;
 	private ParameterFile loadedFile = null;
 	private boolean saved = true;
 	private boolean autosave = true;
@@ -86,7 +79,6 @@ public class MainFrame extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
-		stage.setTitle("ParamTuner GUI");
 		stage.getIcons().add(new Image(getClass().getClassLoader().getResourceAsStream("icon.png")));
 		
 		stage.setOnCloseRequest((event) -> {
@@ -106,18 +98,13 @@ public class MainFrame extends Application {
 
 		// Save settings in a persistent way
 		prefs = Preferences.userRoot().node(this.getClass().getName());
-		filepath = prefs.get("lastpath","");
-		if (filepath != "") {
-			getCurrentFilename(filepath);
-			stage.setTitle(currentFileName);
-		}
+		file = new File(prefs.get("lastpath",""));
 		autosave = prefs.getBoolean("autosave", true);
 		
 		BorderPane globalPanel = new BorderPane();
-		globalPanel.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(3))));
 		
-		double windowWidth = prefs.getDouble(getCode(filepath) + "width", 300);
-		double windowHeight = prefs.getDouble(getCode(filepath) + "height", 300);
+		double windowWidth = prefs.getDouble(getCode(file.getPath()) + "width", 300);
+		double windowHeight = prefs.getDouble(getCode(file.getPath()) + "height", 300);
 		
 		scene = new Scene(globalPanel, windowWidth, windowHeight);
 		stage.setScene(scene);
@@ -143,13 +130,9 @@ public class MainFrame extends Application {
 		open.setOnAction(e -> {
 			File f = fileChooser.showOpenDialog(stage);
 			if (f != null) {
-				filepath = f.getPath();
-				setFilePathAndLoad(filepath);
-				getCurrentFilename(filepath);
-				stage.setTitle(currentFileName);
+				setFilePathAndLoad(f.getPath());
 			}
-			}
-		);
+		});
 		
 		// Open recent
 		//openrecent = new Menu("Open Recent");
@@ -177,7 +160,7 @@ public class MainFrame extends Application {
 			 * we wan't to revert file (useless to revert just after saving)
 			 */
 			saved = true;
-			loadFile(filepath);
+			loadFile(file);
 		});
 		
 		menu1.getItems().addAll(open, smi, btnSave, chckbxAutosave, smi2, btnRevert);
@@ -212,27 +195,22 @@ public class MainFrame extends Application {
 		globalPanel.setCenter(contentScroll);
 		
 		contentPanel = new VBox();
-		contentPanel.setBorder(new Border(new BorderStroke(Color.TRANSPARENT, null, null, new BorderWidths(3))));
 		contentScroll.setContent(contentPanel);
 		contentScroll.setFitToWidth(true);
 
 		
-		scene.widthProperty().addListener(new ChangeListener<Number>() {
-		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) {
-		        prefs.putDouble(getCode(filepath) + "width", (double)newSceneWidth);
-		    }
+		scene.widthProperty().addListener((observableValue, oldSceneWidth, newSceneWidth) -> {
+		        prefs.putDouble(getCode(file.getPath()) + "width", (double)newSceneWidth);
 		});
 		
-		scene.heightProperty().addListener(new ChangeListener<Number>() {
-		    @Override public void changed(ObservableValue<? extends Number> observableValue, Number oldSceneHeight, Number newSceneHeight) {
-		        prefs.putDouble(getCode(filepath) + "height", (double)newSceneHeight);
-		    }
+		scene.heightProperty().addListener((observableValue, oldSceneHeight, newSceneHeight) -> {
+		    prefs.putDouble(getCode(file.getPath()) + "height", (double)newSceneHeight);
 		});
 		
 		saveThread.start();
 		
-		loadFile(filepath);
-		
+		loadFile(file);
+		updateTitle();
 		stage.show();
 	}
 	
@@ -262,11 +240,6 @@ public class MainFrame extends Application {
 		
 	}
 	
-	private void getCurrentFilename(String filepath) {
-		String[] parts = filepath.split("/");
-		currentFileName = parts[parts.length-1];
-	}
-	
 	
 	
 	/**
@@ -286,12 +259,12 @@ public class MainFrame extends Application {
 		return true;
 	}
 	
-	public void loadFile(String path) {
+	public void loadFile(File f) {
 		
-		if (path.trim().isEmpty()) {
+		if (new File("").equals(f)) {
 			String value = FXDialogUtils.showConfirmDialog("Error", null, "Path not specified. Do you want to open?", "Yes", "No");
 			if ("Yes".equals(value)) {
-				File f = fileChooser.showOpenDialog(stage);
+				f = fileChooser.showOpenDialog(stage);
 				if (f != null)
 					setFilePathAndLoad(f.getPath());
 			}
@@ -305,11 +278,11 @@ public class MainFrame extends Application {
 		
 		
 		ParameterFile pFile;
-		prefs.put("lastpath", path);
+		prefs.put("lastpath", f.getPath());
 		
 		
 		try {
-			pFile = new ParameterFile(path, true);
+			pFile = new ParameterFile(f.getPath(), true);
 			
 			for (Parameter p : pFile.getAll()) {
 				addConfigEntry(p);
@@ -323,9 +296,9 @@ public class MainFrame extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 			clearConfigEntries();
-			String value = FXDialogUtils.showConfirmDialog("Unable to load the file", "Path: " + path, e.getMessage()+"\n\nDo you want to open another file?", "Yes", "No");
+			String value = FXDialogUtils.showConfirmDialog("Unable to load the file", "Path: " + f.getPath(), e.getMessage()+"\n\nDo you want to open another file?", "Yes", "No");
 			if ("Yes".equals(value)) {
-				File f = fileChooser.showOpenDialog(stage);
+				f = fileChooser.showOpenDialog(stage);
 				if (f != null)
 					setFilePathAndLoad(f.getPath());
 			}
@@ -344,25 +317,36 @@ public class MainFrame extends Application {
 		contentPanel.getChildren().add(ParameterPanel.fromParameter(this, contentPanel.getChildren().size(), p));
 	}
 	
+	private void setFileAndLoad(File f) {
+		file = f;
+		updateTitle();
+		loadFile(file);
+	}
+	
 	public void setFilePathAndLoad(String path) {
-		filepath = path;
-		getCurrentFilename(filepath);
-		stage.setTitle(currentFileName);
-		loadFile(path);
+		setFileAndLoad(new File(path.trim()));
 	}
 	
 	public void onContentModify() {
 		setSaved(false);
-		stage.setTitle(currentFileName + "*");
-		if (autosave) {
+		if (autosave)
 			saveFile();
-			stage.setTitle(currentFileName);
-		}
 	}
 	
 	private void setSaved(boolean s) {
 		saved = s;
+		updateTitle();
 		updateSaveButton();
+	}
+	
+	private void updateTitle() {
+		String t = "ParamTuner GUI";
+		if (file != null && !new File("").equals(file)) {
+			t = file.getName() + " - " + t;
+			if (!saved)
+				t = "*" + t;
+		}
+		stage.setTitle(t);
 	}
 	
 	private void setAutosave(boolean as) {
@@ -376,7 +360,6 @@ public class MainFrame extends Application {
 		
 	private void updateSaveButton() {
 		btnSave.setDisable(autosave || saved);
-		stage.setTitle(currentFileName);
 	}
 	
 	private class SaveThread extends Thread {

@@ -40,6 +40,20 @@ public class IntegerParameterPanel extends ParameterPanel {
 				minMaxValid ? (long) p.getMin() : Long.MIN_VALUE,
 				minMaxValid ? (long) p.getMax() : Long.MAX_VALUE, value);
 		spinner.setEditable(true);
+		
+		// pressing ENTER after editing the spinner value is no more required
+		// Here is how the value is automatically updated every time the editor's value change :
+		spinner.getEditor().textProperty().addListener((o, old, newValue) -> {
+			Double newV = null;
+			try {
+				newV = spinner.getValueFactory().getConverter().fromString(newValue);
+			} catch (Exception e) {
+				// ignore
+			}
+			if (newV != null) {
+				spinner.getValueFactory().setValue(newV);
+			}
+		});
 		spinner.valueProperty().addListener((o, old, newValue) -> {
 			p.setValue(newValue.longValue());
 			notifyContentModification();
