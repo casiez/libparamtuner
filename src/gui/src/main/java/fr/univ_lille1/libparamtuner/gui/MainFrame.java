@@ -22,14 +22,10 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 
-import fr.univ_lille1.libparamtuner.gui.parameters_panel.ParameterPanel;
-import fr.univ_lille1.libparamtuner.parameters.Parameter;
-import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
@@ -55,6 +51,10 @@ import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
+
+import fr.univ_lille1.libparamtuner.gui.parameters_panel.ParameterPanel;
+import fr.univ_lille1.libparamtuner.parameters.Parameter;
+import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
 
 public class MainFrame extends Application {
 	

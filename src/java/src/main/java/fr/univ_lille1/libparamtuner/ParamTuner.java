@@ -23,6 +23,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import fr.univ_lille1.libparamtuner.parameters.Parameter;
 import fr.univ_lille1.libparamtuner.parameters.ParameterFile;
@@ -119,14 +121,9 @@ import fr.univ_lille1.libparamtuner.parameters.Type;
  * 
  */
 public class ParamTuner {
-
-	/* package */ static void printError(String message) {
-		System.err.println("libParamTuner: " + message);
-	}
 	
-	/* package */ static void printInfo(String message) {
-		System.out.println("libParamTuner: " + message);
-	}
+	/* package */ static final Logger logger = Logger.getLogger(ParamTuner.class.getName());
+	private static final Level defaultLevel = logger.getLevel();
 	
 	/*
 	 * Static data structure
@@ -171,25 +168,23 @@ public class ParamTuner {
 									.apply(t.parameterClass.cast(param)));
 						}
 						else {
-							printError("Setting '" + param.name + "' has type '" + param.getType().name().toLowerCase()
+							logger.severe("Setting '" + param.name + "' has type '" + param.getType().name().toLowerCase()
 									+ "' in XML file but is binded to Java type " + bind.javaType.getSimpleName()
 									+ ".");
 						}
 					}
 					else {
-						printError("Setting '" + param.name + "' is not binded to a variable.");
+						logger.warning("Setting '" + param.name + "' is not binded to a variable.");
 					}
 					
 				} catch (NumberFormatException e) {
-					printError("Value for setting '" + param.name + "' is not a valid.");
-					e.printStackTrace();
+					logger.log(Level.SEVERE, "Value for setting '" + param.name + "' is not valid.", e);
 				}
 			}
 		} catch (FileNotFoundException e) {
-			printError(e.getMessage());
+			logger.log(Level.SEVERE, e.getMessage(), e);
 		} catch (Exception e) {
-			printError("Error while parsing XML file:");
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Error while parsing XML file", e);
 		}
 	}
 	
@@ -303,8 +298,7 @@ public class ParamTuner {
 		try {
 			fileWatcherInstance = new FileWatcher(configFile, ParamTuner::fileModificationCallback);
 		} catch (Exception e) {
-			printError("Can't start Watcher thread because of Exception:");
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "Can't start Watcher thread because of Exception:", e);
 			fileWatcherInstance = null;
 			return;
 		}
@@ -346,7 +340,15 @@ public class ParamTuner {
 		binding.put(parameterName, new Bind<>(javaType, setter));
 	}
 	
-	
+
+	/**
+		Unbind a previously binded variable.
+		
+		If there is no binding with the specified name, this method does nothing.
+		
+		@param parameterName the parameter name, that is equal to the node name
+		containing the parameter value.
+	*/
 	public synchronized static void unbind(String parameterName) {
 		binding.remove(parameterName);
 	}
@@ -354,6 +356,17 @@ public class ParamTuner {
 	
 	
 	private static boolean once = true;
+	
+	/**
+		Manually update all binded variables if the file was modified since
+		the last update.
+		
+		This only work if the <code>load(...)</code> method is called with the
+		<code>manualUpdate</code> parameter set to true.
+		
+		This method also work juste after calling the <code>load(...)</code> method.
+		
+	*/
 	public synchronized static void update() {
 		if (useUpdateFunction) {
 			if (someParametersChanged) {
@@ -363,10 +376,24 @@ public class ParamTuner {
 		}
 		else {
 			if (once) {
-				printError("libParamTuner update() call is useless unless manualUpdate parameter in load method is set to true");
+				logger.warning("libParamTuner update() call is useless unless manualUpdate parameter in load method is set to true");
 				once = false;
 			} 
 		}
+	}
+	
+	
+	
+	
+	/**
+	 * Set if log messages under Level.SEVERE are displayed.
+	 * 
+	 * Default is <code>true</code>
+	 * 
+	 * @param log <code>true</code> if log messages are displayed
+	 */
+	public static void logWarnings(boolean log) {
+		logger.setLevel(log ? defaultLevel : Level.SEVERE);
 	}
 	
 }

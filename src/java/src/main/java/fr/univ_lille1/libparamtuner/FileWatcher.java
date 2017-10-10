@@ -28,6 +28,7 @@ import java.nio.file.WatchEvent.Modifier;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.function.Consumer;
+import java.util.logging.Level;
 
 class FileWatcher extends Thread {
 	public final File confFile;
@@ -84,7 +85,7 @@ class FileWatcher extends Thread {
 			 */
 			Class<?> c = Class.forName("com.sun.nio.file.SensitivityWatchEventModifier");
 			Modifier watcherModifier = (Modifier) c.getField("HIGH").get(null);
-			ParamTuner.printInfo("Watcher Sensitivity Modifier: com.sun.nio.file.SensitivityWatchEventModifier.HIGH");
+			ParamTuner.logger.info("Watcher Sensitivity Modifier: com.sun.nio.file.SensitivityWatchEventModifier.HIGH");
 			
 			/*
 			 * This watcher modifier is, by default, setted with an interval of 2 seconds
@@ -97,11 +98,11 @@ class FileWatcher extends Thread {
 			jModifiersField.setInt(sensitivityField, sensitivityField.getModifiers() & ~java.lang.reflect.Modifier.FINAL);
 			
 			sensitivityField.setInt(watcherModifier, 1);
-			ParamTuner.printInfo("Watcher Sensitivity Modifier: com.sun.nio.file.SensitivityWatchEventModifier.HIGH set sensitivity to 1 second via reflexion");
+			ParamTuner.logger.info("Watcher Sensitivity Modifier: com.sun.nio.file.SensitivityWatchEventModifier.HIGH set sensitivity to 1 second via reflexion");
 			
 			return watcherModifier;
 		} catch (Exception e) {
-			ParamTuner.printInfo("Watcher Sensitivity Modifier: null");
+			ParamTuner.logger.info("Watcher Sensitivity Modifier: null");
 			return null; // fallback (other Java implementation may be handled here)
 		}
 	}
@@ -120,7 +121,7 @@ class FileWatcher extends Thread {
 				try {
 					key = watcher.take();
 				} catch (InterruptedException e) {
-					ParamTuner.printError("thread interrupted");
+					ParamTuner.logger.log(Level.SEVERE, "thread interrupted", e);
 					watcher.close();
 					return;
 				}
@@ -148,14 +149,13 @@ class FileWatcher extends Thread {
 				// reset key and remove from set if directory no longer accessible
 				boolean valid = key.reset();
 				if (!valid) {
-					ParamTuner.printError("WatchKey no longer valid");
+					ParamTuner.logger.severe("WatchKey no longer valid");
 					watcher.close();
 					return;
 				}
 			}
 		} catch (Exception e) {
-			ParamTuner.printError("Exception in watcher thread:");
-			e.printStackTrace();
+			ParamTuner.logger.log(Level.SEVERE, "Exception in watcher thread", e);
 		}
 	}
 }
