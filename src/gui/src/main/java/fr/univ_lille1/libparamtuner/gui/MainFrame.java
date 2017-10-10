@@ -19,8 +19,10 @@ package fr.univ_lille1.libparamtuner.gui;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
@@ -222,8 +224,8 @@ public class MainFrame extends Application {
 		try {
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			byte bytes[] = md.digest(filepath.getBytes("ISO-8859-1"));
-			res = new String(bytes, "ISO-8859-1");
-			res = res.substring(0, 10); 
+			BigInteger bi = new BigInteger(1, bytes);
+			res = String.format("%0" + (bytes.length << 1) + "X", bi);
 			//System.out.println(res);
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
