@@ -98,7 +98,10 @@ public class MainFrame extends Application {
 
 		// Save settings in a persistent way
 		prefs = Preferences.userRoot().node(this.getClass().getName());
-		file = new File(prefs.get("lastpath",""));
+		if (getParameters().getRaw().size() > 0)
+			file = new File(getParameters().getRaw().get(0));
+		else
+			file = new File(prefs.get("lastpath",""));
 		autosave = prefs.getBoolean("autosave", true);
 		
 		BorderPane globalPanel = new BorderPane();
