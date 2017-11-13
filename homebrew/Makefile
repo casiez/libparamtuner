@@ -36,5 +36,5 @@ uninstall:
 	rm -rf $(PREFIX)/include/paramtuner.h
 	rm -f $(PREFIX)/lib/$(LIBPARAMTUNER)
 tarball: distclean
-	cd .. && tar cvzf libparamtuner-mac-1.1.tar.gz libparamtuner-1.1/
-	openssl dgst -sha256 ../libparamtuner-mac-1.1.tar.gz
+	cd .. && tar cvzf libparamtuner-mac-1.2.tar.gz libparamtuner-1.2/
+	openssl dgst -sha256 ../libparamtuner-mac-1.2.tar.gz

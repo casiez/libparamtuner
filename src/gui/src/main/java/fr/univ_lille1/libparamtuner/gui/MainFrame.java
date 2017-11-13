@@ -179,7 +179,7 @@ public class MainFrame extends Application {
 			Alert alert = new Alert(AlertType.INFORMATION);
 			alert.setTitle("About");
 			alert.setHeaderText(null);
-			alert.setContentText("ParamTunerGUI version 1.1\n\nParamTunerGUI is part of libParamTuner\nGet more information on https://github.com/casiez/libparamtuner");
+			alert.setContentText("ParamTunerGUI version 1.2\n\nParamTunerGUI is part of libParamTuner\nGet more information on https://github.com/casiez/libparamtuner");
 			
 			alert.showAndWait();
 		});

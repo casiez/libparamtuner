@@ -1,6 +1,6 @@
 #!/bin/bash
 
-DEST=libparamtuner-1.1
+DEST=libparamtuner-1.2
 DEST2=homebrew/$DEST
 
 rm -rf $DEST
