@@ -2,6 +2,10 @@
 
 Cross-platform library to ease the interactive tuning of parameters at run time and without the need to recompile code.
 
+## Install on macOS using Homebrew
+
+Run ```brew install casiez/libparamtuner/libparamtuner```
+
 ## Minimal example
 ```cpp
 #include <iostream>
@@ -112,7 +116,7 @@ To get the javadoc, run `mvn javadoc:javadoc` , then go to the subdirectory
 
 ## ParamTuner GUI
 
-This Java (Swing) interface allow developers to change value in
+This JavaFX interface allow developers to change value in
 real-time without having to edit the settings file manually.
 
 ### Available binaries
